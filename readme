@@ -1,0 +1,3 @@
+by James Long
+
+template for .Rmd files. includes preferred default layouts, functions to writing TODOs which are robust to output (word, docx, html), references, etc.
