@@ -63,6 +63,9 @@ These work for html/pdf. Print uncolored text in docx.
 
 `r colorize("this is blue","blue")`
 
+## Tables
+
+
 
 ## Citations
 
