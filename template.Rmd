@@ -1,8 +1,8 @@
 ---
 title: "RMarkdown Template"
 author: "James Long"
-date: "5/14/2020"
 always_allow_html: yes
+bibliography: refs.bib
 output:
   html_document:
     theme: united
@@ -11,16 +11,21 @@ output:
     toc_float: yes
 ---
 
-```{r notes,echo=FALSE,include=FALSE,eval=FALSE}
-## if using word copy below text into output
+```{r alternative-preables,echo=FALSE,include=FALSE,eval=FALSE}
+## add date
+date: "05/20/2020"
+
+## if using word replace output with
 output:
   word_document:
     toc: yes
 
-## if using pdf copy below text into output
+## if using pdf replace output with
 output:
   pdf_document:
     toc: yes
+header-includes:
+  - \usepackage{xcolor}
 ```
 
 ```{r setup, include=FALSE}
@@ -46,35 +51,23 @@ todo <- function(x){
 }
 ```
 
+## Resources
 
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Many ideas here are taken/adapted from [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)
 
 ## Colored Text and Todos
 
-Can add a TODO:
+These work for html/pdf. Print uncolored text in docx.
 
 `r todo("do more work here")`
 
-Or can add any color text:
-
 `r colorize("this is blue","blue")`
 
+
+## Citations
+
+I wrote an article about positive-unlabeled learning [@lin2020flexible]. @lin2020flexible connects positive unlabeled learning with multiple testing.
+
+## Numbering Equations
+
+## Bibliography
