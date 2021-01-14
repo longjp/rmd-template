@@ -1,11 +1,11 @@
 Package: template
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Templates for R Markdown Documents
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: James Long
+Maintainer: <jplong@mdanderson.org>
+Description: Contains templates for producing R Markdown documents with nice structure.
+License: GPL (>= 2)
+URL: https://github.com/longjp/template
 Encoding: UTF-8
 LazyData: true
