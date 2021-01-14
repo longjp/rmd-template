@@ -1,0 +1,10 @@
+	- favorite shortcuts, e.g. \E
+	- comment out large chunks of text (does /* comment */ work?)
+	- kable examples?
+	- nice grids of plots
+	- create macros to address word deficiences
+	- https://datascienceplus.com/r-markdown-how-to-format-tables-and-figures-in-docx-files/
+	- word formatting tables, use knitr::kable rather than straight up kable function, why?
+	- https://rmarkdown.rstudio.com/articles_docx.html
+	- custom markdown with figs center, fig size, todo
+	- browse https://bookdown.org/yihui/rmarkdown-cookbook/
