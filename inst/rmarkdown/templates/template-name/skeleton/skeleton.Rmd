@@ -49,6 +49,12 @@ colorize <- function(x, color) {
 todo <- function(x){
   paste0("**",colorize(x,"todo"),"**")
 }
+
+library(rvg)
+library(tidyverse)
+library(officer)
+
+
 ```
 
 ## Resources
@@ -85,5 +91,21 @@ ggplot(dat,aes(x=beta1,y=beta2)) +
 ```
 
 ## Numbering Equations
+
+## Saving Plots to pptx
+
+```{r save-plot}
+library(ggplot2)
+library(rvg)
+library(officer)
+
+p <- ggplot(cars,aes(x=speed,y=dist)) +
+  geom_point()
+doc <- read_pptx()
+doc <- add_slide(doc, layout = "Title and Content", master = "Office Theme")
+my_vec_graph <- dml(code=plot(p))
+doc <- ph_with(doc, my_vec_graph, location = ph_location_fullsize() )
+print(doc, target = "plots.pptx")
+```
 
 ## Bibliography
