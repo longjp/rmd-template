@@ -1,0 +1,80 @@
+---
+title: "Plot Examples in Markdown"
+author: "James Long"
+always_allow_html: yes
+date: "`r Sys.Date()`"
+output: html_document
+    theme: united
+    toc: yes
+    toc_collapsed: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+## colorizes text when using html or pdf output
+## just spits out text x for word
+colorize <- function(x, color) {
+  if(color=="todo"){
+    color <- "red"
+    x <- paste0("TODO: ",x)
+  }
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color, 
+      x)
+  } else x
+}
+
+todo <- function(x){
+  paste0("**",colorize(x,"todo"),"**")
+}
+
+library(rvg)
+library(officer)
+```
+
+## Latex in Plots
+
+```{r latex-in-plots}
+library(latex2exp)
+library(ggplot2)
+
+dat <- data.frame(beta1=rnorm(100),beta2=rnorm(100))
+ggplot(dat,aes(x=beta1,y=beta2)) + 
+  geom_point() +
+  labs(x=TeX("$\\widehat{\\beta}_1$"),
+       y=TeX("$\\widehat{\\beta}_2$"))
+```
+
+## Saving Plots to pptx
+
+```{r save-plot}
+library(ggplot2)
+library(rvg)
+library(officer)
+
+p <- ggplot(cars,aes(x=speed,y=dist)) +
+  geom_point()
+doc <- read_pptx()
+doc <- add_slide(doc, layout = "Title and Content", master = "Office Theme")
+my_vec_graph <- dml(code=plot(p))
+doc <- ph_with(doc, my_vec_graph, location = ph_location_fullsize() )
+print(doc, target = "plots.pptx")
+```
+
+
+## Grid of ggplots
+
+```{r grid}
+library(ggplot2)
+library(gridExtra)
+
+p1 <- ggplot(cars,aes(x=speed,y=dist)) +
+  geom_point()
+p2 <- ggplot(cars,aes(x=dist,y=speed)) +
+  geom_point()
+grid.arrange(p1,p2,ncol=2)
+```

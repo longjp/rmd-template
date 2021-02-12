@@ -1,0 +1,3 @@
+name: Example Plots
+description: Example plots demonstrating ggplot2 functionality and Rmarkdown figure placement
+create_dir: false
