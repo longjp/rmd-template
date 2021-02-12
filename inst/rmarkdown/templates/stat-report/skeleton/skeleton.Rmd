@@ -2,7 +2,6 @@
 title: "RMarkdown Template"
 author: "James Long"
 always_allow_html: yes
-bibliography: refs.bib
 output:
   html_document:
     theme: united
@@ -11,7 +10,7 @@ output:
     toc_float: yes
 ---
 
-```{r alternative-preables,echo=FALSE,include=FALSE,eval=FALSE}
+```{r alternative-preambles,echo=FALSE,include=FALSE,eval=FALSE}
 ## add date
 date: "05/20/2020"
 
@@ -51,10 +50,7 @@ todo <- function(x){
 }
 
 library(rvg)
-library(tidyverse)
 library(officer)
-
-
 ```
 
 ## Resources
@@ -70,12 +66,6 @@ These work for html/pdf. Print uncolored text in docx.
 `r colorize("this is blue","blue")`
 
 ## Tables
-
-
-
-## Citations
-
-I wrote an article about positive-unlabeled learning [@lin2020flexible]. @lin2020flexible connects positive unlabeled learning with multiple testing.
 
 ## Latex in Plots
 
@@ -108,4 +98,14 @@ doc <- ph_with(doc, my_vec_graph, location = ph_location_fullsize() )
 print(doc, target = "plots.pptx")
 ```
 
-## Bibliography
+## Citations
+
+```{r citations}
+## Follow these steps
+## 1) add "bibliography: refs.bib" to yaml
+## 2) create refs.bib file with bibtex and reference tag X
+## 3) Add this text to document, replacing X with bibtex citation tag. "This is citation at end of sentece [@X]. @X is a very important paper."
+## 4) add "## Bibliography" to bottom of Rmd
+```
+
+
