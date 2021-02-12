@@ -1,5 +1,5 @@
 ---
-title: "Instrumental Variables and the Causal Dantzig"
+title: "Presentation Title"
 author: "James Long"
 date: "2/10/2021"
 output:
@@ -42,34 +42,15 @@ todo <- function(x){
 
 # Introduction
 
-## Kemmeren Gene Knockout Data
+## Slide Title
 
-* Measured expression of $\sim 6000$ genes in yeast
-* $\sim 300$ observational readings
-* $\sim 1400$ single gene knockouts
+* A list
+* with some elements
 
+# Main Section
 
-**Goal:** What genes are causes of $Y$? (Gene $X$ is a cause of $Y$ if when we knock it out, $Y$ expression has large change)
+## Another Slide
 
+1. This is a numered list
+2. With two points
 
-## Environment Approach
-
-* Assume causal DAG with linear structure
-* Gene $Y$ expression is linear function of other genes $X \in \mathbb{R}^p$
-$$
-Y = X^T\beta + \delta_Y
-$$
-* $\beta_j=0$ implies $X_j$ is not a direct cause of $Y$
-* In Kemmeren, observations can be divided into observational and interventional **environments**
-* **Environment** based methods for estimating $\beta$
-    * **Invariant Causal Prediction (ICP)** (consistent when no confounding)
-    * **Causal Dantzig (CD)**
-    
-## Evaluating Models
-
-* **Training set:** All observational data and $~1000$ interventions
-* **Test set:** $~400$ knockouts, so $Z \in \mathbb{R}^{400 \times 6000}$ matrix
-* **Significant interventional effect (SIE):** $Z^S \in \{0,1\}^{400 \times 6000}$
-   * $Z^S_{i,j} = 1$ if $Z_{i,j}$ outside range of gene $j$ in observational data
-   * $Z^S_{i,j} = 0$ otherwise
-* **Goal:** Use training data to predict $Z^S$.
