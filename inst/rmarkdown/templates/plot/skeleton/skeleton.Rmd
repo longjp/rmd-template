@@ -4,10 +4,6 @@ author: "James Long"
 always_allow_html: yes
 date: "`r Sys.Date()`"
 output: html_document
-    theme: united
-    toc: yes
-    toc_collapsed: yes
-    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
