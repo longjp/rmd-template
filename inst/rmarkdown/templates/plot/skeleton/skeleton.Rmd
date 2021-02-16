@@ -74,3 +74,28 @@ p2 <- ggplot(cars,aes(x=dist,y=speed)) +
   geom_point()
 grid.arrange(p1,p2,ncol=2)
 ```
+
+## Kaplan-Meier Plots
+
+```{r km-surv}
+library(survival)
+library(survminer)
+
+n <- 100
+tdata <- data.frame(time=,
+                    status=,
+                    n=)
+fit  <- survfit(Surv(time, time, status, type='interval') ~1, 
+              data=tdata, weight=n)
+p <- ggsurvplot(fit)
+names(p)
+## the plot element of the list p contains the ggplot
+p <- p$plot
+plot(p) ## has different theme than standard ggplot
+## changes to default theme
+## https://ggplot2.tidyverse.org/reference/ggtheme.html
+p <- p + theme_grey() 
+plot(p)
+
+
+```
