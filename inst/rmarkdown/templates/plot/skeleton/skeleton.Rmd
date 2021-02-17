@@ -77,13 +77,40 @@ grid.arrange(p1,p2,ncol=2)
 
 ## Kaplan-Meier Plots
 
-Typically make Kaplan-Meier survival curves using `survfit` function in package survival. Here we use ``ggsurvplot` from `survminer` packages. Other options:
+Typically make Kaplan-Meier survival curves using `survfit` function in package survival. Here we use ``ggsurv` from `GGally` package. Other options:
 
 * R base graphics `plot` function. All colors and axis labels must be written manually. Requires a lot of code.
 * autoplot in ggfortify. Somewhat a pain to use with multiple covariates [https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables](https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables)
+* `ggsurvplot` in `survminer`: Do not like default theme, choice of category labels. Zooming using `coord_cartesian` does not automatically update tick mark labels, returns complex object, not just ggplot. Might be useful for adding patient at risk numbers to bottom of plot.
 
-```{r km-surv}
 
+```{r km-ggally}
+library(survival)
+library(GGally)
+
+## one curve
+mgus$old <- mgus$dxyr > median(mgus$dxyr)
+fit  <- survfit(Surv(futime,death) ~1, 
+              data=mgus)
+p <- ggsurv(fit)
+plot(p)
+
+## single covariate
+fit  <- survfit(Surv(futime,death) ~sex, 
+              data=mgus)
+p <- ggsurv(fit)
+p
+
+## multiple covariates
+fit  <- survfit(Surv(futime,death) ~sex+old, 
+              data=mgus)
+p <- ggsurv(fit)
+p
+p + coord_cartesian(xlim=c(0,5000))
+```
+
+
+```{r km-surv,eval=FALSE,include=FALSE}
 library(survival)
 library(survminer)
 
@@ -150,6 +177,7 @@ p <- p$plot
 p + guides(color=guide_legend(title=NULL)) +
   xlab("Time (days)") + labs(y="Surv",title="mgus data") +
  theme_grey() + theme(legend.position=c(0.8,0.8))
+                      
 ```
 
 
