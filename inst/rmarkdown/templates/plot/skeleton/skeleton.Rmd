@@ -77,16 +77,35 @@ grid.arrange(p1,p2,ncol=2)
 
 ## Kaplan-Meier Plots
 
+Typically make Kaplan-Meier survival curves using `survfit` function in package survival. Here we use ``ggsurvplot` from `survminer` packages. Other options:
+
+* R base graphics `plot` function. All colors and axis labels must be written manually. Requires a lot of code.
+* autoplot in ggfortify. Somewhat a pain to use with multiple covariates [https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables](https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables)
+
 ```{r km-surv}
+
 library(survival)
 library(survminer)
 
-n <- 100
-tdata <- data.frame(time=,
-                    status=,
-                    n=)
-fit  <- survfit(Surv(time, time, status, type='interval') ~1, 
-              data=tdata, weight=n)
+## one curve
+mgus$old <- mgus$dxyr > median(mgus$dxyr)
+fit  <- survfit(Surv(futime,death) ~1, 
+              data=mgus)
+p <- ggsurvplot(fit)
+names(p)
+## the plot element of the list p contains the ggplot
+p <- p$plot
+plot(p) ## has different theme than standard ggplot
+
+
+## changes to default theme
+## https://ggplot2.tidyverse.org/reference/ggtheme.html
+p <- p + theme_grey() 
+plot(p)
+
+## single covariate
+fit  <- survfit(Surv(futime,death) ~sex, 
+              data=mgus)
 p <- ggsurvplot(fit)
 names(p)
 ## the plot element of the list p contains the ggplot
@@ -97,5 +116,59 @@ plot(p) ## has different theme than standard ggplot
 p <- p + theme_grey() 
 plot(p)
 
+## multiple covariates
+fit  <- survfit(Surv(futime,death) ~sex+old, 
+              data=mgus)
+p <- ggsurvplot(fit)
+p <- p$plot
+p <- p + theme_grey() 
+plot(p)
+```
 
+
+## Legends, Axes, Titles
+
+ggplot2 language
+
+* aesthetic: x, y, color, shape, etc
+* scale: each plot aesthetic is association with 1 scale which is a function from data space to aesthetic space
+* guides: legends and axes. allow user to map values from plot back to data
+* layer: collection of geometric objects (geoms)
+
+useful functions
+
+* labs: specify name associated with scale
+
+```{r leg-axes-titles}
+library(survival)
+library(survminer)
+mgus$old <- mgus$dxyr > median(mgus$dxyr)
+fit  <- survfit(Surv(futime,death) ~sex+old, 
+              data=mgus)
+p <- ggsurvplot(fit)
+p <- p$plot 
+p + guides(color=guide_legend(title=NULL)) +
+  xlab("Time (days)") + labs(y="Surv",title="mgus data") +
+ theme_grey() + theme(legend.position=c(0.8,0.8))
+```
+
+
+```{r practice}
+toy <- data.frame(
+  const = 1, 
+  up = 1:4,
+  txt = letters[1:4], 
+  big = (1:4)*1000,
+  log = c(2, 5, 10, 2000)
+)
+base <- ggplot(toy, aes(const, up)) +
+  scale_x_continuous(NULL, breaks = NULL)
+base + geom_point(aes(colour = txt))
+base + geom_point(aes(shape = txt))
+base + geom_point(aes(shape = txt, colour = txt))
+
+base <- ggplot(toy, aes(const, up))
+
+base + geom_point(aes(colour = txt))
+?scale_x_continuous
 ```
