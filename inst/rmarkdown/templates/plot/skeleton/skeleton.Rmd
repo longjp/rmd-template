@@ -94,20 +94,42 @@ fit  <- survfit(Surv(futime,death) ~1,
               data=mgus)
 p <- ggsurv(fit)
 plot(p)
+```
 
+
+```{r km-single}
 ## single covariate
 fit  <- survfit(Surv(futime,death) ~sex, 
               data=mgus)
 p <- ggsurv(fit)
-p
+p + scale_color_discrete(name="Howdy")
+```
 
-## multiple covariates
+```{r km-multiple}
+## multiple covariates, only use color to distinguish
 fit  <- survfit(Surv(futime,death) ~sex+old, 
               data=mgus)
 p <- ggsurv(fit)
 p
+## note: changing legend name is tricky because both colour and linetype must be specified as Groups
+p + coord_cartesian(xlim=c(0,5000)) + labs(colour='Groups',linetype='Groups')
+```
+
+Use line type and color to distinguish curves `r todo("still writing")`:
+
+```{r km-multiple-color-lty}
+## multiple covariates, only use color to distinguish
+fit  <- survfit(Surv(futime,death) ~ sex+old, 
+              data=mgus)
+fit  <- survfit(Surv(futime,death) ~ interaction(sex,old), 
+              data=mgus)
+p <- ggsurv(fit)
+p
+p <- ggsurv(fit,surv.col=c(1,1,2,2),lty.est=c(1,1,2,2))
+p
 p + coord_cartesian(xlim=c(0,5000))
 ```
+
 
 
 ```{r km-surv,eval=FALSE,include=FALSE}
