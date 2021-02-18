@@ -175,7 +175,33 @@ plot(p)
 ```
 
 
-## Legends, Axes, Titles
+## pairs Plots
+
+```{r pairs}
+library(ggplot2)
+library(GGally)
+
+head(iris)
+
+## simple
+p <- ggpairs(iris,columns=1:4)
+p
+
+## make points smaller
+p <- ggpairs(iris,
+             lower=list(continuous=wrap("points",alpha=0.3,size=0.1)),
+             columns=1:4)
+p
+
+## add color
+p <- ggpairs(iris,
+             mapping=aes(color=Species),
+             lower=list(continuous=wrap("points",alpha=0.5,size=0.5)),
+             columns=1:4)
+p
+```
+
+## ggplot2 Notes
 
 ggplot2 language
 
@@ -188,19 +214,7 @@ useful functions
 
 * labs: specify name associated with scale
 
-```{r leg-axes-titles}
-library(survival)
-library(survminer)
-mgus$old <- mgus$dxyr > median(mgus$dxyr)
-fit  <- survfit(Surv(futime,death) ~sex+old, 
-              data=mgus)
-p <- ggsurvplot(fit)
-p <- p$plot 
-p + guides(color=guide_legend(title=NULL)) +
-  xlab("Time (days)") + labs(y="Surv",title="mgus data") +
- theme_grey() + theme(legend.position=c(0.8,0.8))
-                      
-```
+
 
 
 ```{r practice}
