@@ -1,5 +1,5 @@
 ---
-title: "Plot Examples in Markdown"
+title: "Plot and Table Examples in Markdown"
 author: "James Long"
 always_allow_html: yes
 date: "`r Sys.Date()`"
@@ -236,3 +236,18 @@ base <- ggplot(toy, aes(const, up))
 base + geom_point(aes(colour = txt))
 ?scale_x_continuous
 ```
+
+
+## Scrolling Tables
+
+The [kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html) package has functionality for scrolling tables.
+
+```{r scroll-table}
+library(kableExtra)
+head(cars)
+kbl(cars)%>%
+  kable_paper(bootstrap_options="striped",full_width = F) %>%
+  scroll_box(height="200px",width="40%")
+```
+
+Some more text.
