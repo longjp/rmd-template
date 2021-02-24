@@ -50,8 +50,6 @@ todo <- function(x){
   paste0("**",colorize(x,"todo"),"**")
 }
 
-library(rvg)
-library(officer)
 ```
 
 ## Resources
@@ -65,39 +63,6 @@ These work for html/pdf. Print uncolored text in docx.
 `r todo("do more work here")`
 
 `r colorize("this is blue","blue")`
-
-## Tables
-
-## Latex in Plots
-
-```{r latex-in-plots}
-library(latex2exp)
-library(ggplot2)
-
-dat <- data.frame(beta1=rnorm(100),beta2=rnorm(100))
-ggplot(dat,aes(x=beta1,y=beta2)) + 
-  geom_point() +
-  labs(x=TeX("$\\widehat{\\beta}_1$"),
-       y=TeX("$\\widehat{\\beta}_2$"))
-```
-
-## Numbering Equations
-
-## Saving Plots to pptx
-
-```{r save-plot}
-library(ggplot2)
-library(rvg)
-library(officer)
-
-p <- ggplot(cars,aes(x=speed,y=dist)) +
-  geom_point()
-doc <- read_pptx()
-doc <- add_slide(doc, layout = "Title and Content", master = "Office Theme")
-my_vec_graph <- dml(code=plot(p))
-doc <- ph_with(doc, my_vec_graph, location = ph_location_fullsize() )
-print(doc, target = "plots.pptx")
-```
 
 ## Citations
 
