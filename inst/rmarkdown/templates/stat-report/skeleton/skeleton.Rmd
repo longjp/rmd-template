@@ -12,9 +12,6 @@ output:
 ---
 
 ```{r alternative-preambles,echo=FALSE,include=FALSE,eval=FALSE}
-## add date
-date: "05/20/2020"
-
 ## if using word replace output with
 output:
   word_document:
@@ -87,7 +84,7 @@ $$
 ## Follow these steps
 ## 1) add "bibliography: refs.bib" to yaml
 ## 2) create refs.bib file with bibtex and reference tag X
-## 3) Add this text to document, replacing X with bibtex citation tag. "This is citation at end of sentece [@X]. @X is a very important paper."
+## 3) Add this text to document, replacing X with bibtex citation tag. "This is citation at end of sentence [@X]. @X is a very important paper."
 ## 4) add "## Bibliography" to bottom of Rmd
 ```
 
