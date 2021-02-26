@@ -240,7 +240,7 @@ base + geom_point(aes(colour = txt))
 
 ## Scrolling Tables
 
-The [kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html) package has functionality for scrolling tables.
+[kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html) package makes scrolling tables.
 
 ```{r scroll-table}
 library(kableExtra)
@@ -250,4 +250,19 @@ kbl(cars)%>%
   scroll_box(height="200px",width="40%")
 ```
 
-Some more text.
+## Summary Tables
+
+[gtsummary](https://cran.r-project.org/web/packages/gtsummary/index.html) makes summary tables.
+
+```{r summary-table}
+library(gtsummary)
+a <- tbl_summary(cars)
+knit_print(a)
+
+add_p_ex1 <-
+  trial[c("age", "grade", "trt")] %>%
+  tbl_summary(by = trt) %>%
+  add_p()
+
+add_p_ex1
+```
