@@ -3,7 +3,12 @@ title: "Plot and Table Examples in Markdown"
 author: "James Long"
 always_allow_html: yes
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  html_document:
+    theme: united
+    toc: yes
+    toc_collapsed: yes
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -242,6 +247,7 @@ base + geom_point(aes(colour = txt))
 
 [kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html) makes nice tables.
 
+### Basic Tables
 
 Simple Table
 ```{r simple-table}
@@ -308,4 +314,19 @@ add_p_ex1 <-
   add_p()
 
 add_p_ex1
+```
+
+### Latex Tables
+
+kableExtra can output tables in latex. Useful for tables going into papers.
+
+```{r latex-tables}
+## good table advice https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf
+library(kableExtra)
+data(iris)
+iris <- iris[,c(5,1:4)]
+caption <- "Iris data set  \\label{tab:iris}"
+tab <- kbl(iris[1:20,],booktabs=TRUE,format="latex",escape=FALSE,caption=caption) %>%
+    add_header_above(c(" "=1,"Sepal"=2,"Petal"=2))
+save_kable(tab,file="iris.tex")
 ```
