@@ -238,9 +238,52 @@ base + geom_point(aes(colour = txt))
 ```
 
 
-## Scrolling Tables
+## Tables
 
-[kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html) package makes scrolling tables.
+[kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html) makes nice tables.
+
+
+Simple Table
+```{r simple-table}
+library(kableExtra)
+head(cars)
+kbl(cars) %>%
+  kable_paper(bootstrap_options="striped",full_width = F)
+```
+
+Nice header joining columns:
+```{r header-table}
+library(kableExtra)
+head(iris)
+iris <- iris[,c(5,1:4)]
+kbl(iris)%>%
+  kable_paper(bootstrap_options="striped",full_width = F) %>%
+  add_header_above(c(" "=1,"Sepal"=2,"Petal"=2))
+```
+
+Table from table function. Illustrates how to group columns using name which is itself variable.
+```{r table-table}
+library(kableExtra)
+tab <- table(supp=ToothGrowth$supp,dose=ToothGrowth$dose)
+tab
+rcnames <- names(dimnames(tab))
+dn <- rcnames[2]
+myHeader <- c(" "=1,dn=dim(tab)[2])
+names(myHeader) <- c(" ",dn)
+## if rownames indicate variable e.g. "Surgery" variables is "Surgery" or "No Surgery"
+kbl(tab) %>%
+  kable_paper(bootstrap_options="striped",full_width = F) %>%
+  add_header_above(header=myHeader)
+## if rownames do not indicate variable e.g. "Surgery" variables is 0 or 1
+## then make rownames Surgery=0 and Surgery=1
+rownames(tab) <- paste0(rcnames[1],"=",rownames(tab))
+kbl(tab) %>%
+  kable_paper(bootstrap_options="striped",full_width = F) %>%
+  add_header_above(header=myHeader)
+
+```
+
+### Scrolling Tables
 
 ```{r scroll-table}
 library(kableExtra)
@@ -250,9 +293,9 @@ kbl(cars)%>%
   scroll_box(height="200px",width="40%")
 ```
 
-## Summary Tables
+### Summary Tables
 
-[gtsummary](https://cran.r-project.org/web/packages/gtsummary/index.html) makes summary tables.
+[gtsummary](https://cran.r-project.org/web/packages/gtsummary/index.html) makes tables to summarize models coefficient fits and variable distributions.
 
 ```{r summary-table}
 library(gtsummary)
