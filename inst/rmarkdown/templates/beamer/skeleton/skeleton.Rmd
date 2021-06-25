@@ -1,0 +1,1387 @@
+%\documentclass[12pt,aspectratio=169]{beamer}
+\documentclass[12pt]{beamer}
+
+\usepackage{beamerthemesplit}
+
+
+\usepackage{beamerthemesplit}
+
+\usepackage{beamerStatisticsTAMU} 
+
+%\logo{\includegraphics[height=1.5cm]{STAT_Horz-Aggie-Maroon.pdf}\vspace{220pt}}
+
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{verbatim}
+\usepackage{bibentry}
+%\usepackage{biblatex}
+%\usepackage{natbib}
+\newcommand{\argmin}[1]{\underset{#1}{\operatorname{argmin}}\text{ }}
+\newcommand{\argmax}[1]{\underset{#1}{\operatorname{argmax}}\text{ }}
+\usepackage{bbm}
+\usepackage{bm}
+\usepackage[absolute,overlay]{textpos}
+
+\usefonttheme[onlymath]{serif}
+
+\newcommand{\Var}{\text{Var}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\V}[1]{{\bm{\mathbf{\MakeLowercase{#1}}}}} % vector
+\newcommand{\M}[1]{{\bm{\mathbf{\MakeUppercase{#1}}}}} % matrix
+\newcommand{\todo}[1]{{\color{red}TODO: #1}}
+\newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
+\newcommand{\w}{1in}
+\newcommand{\h}{1in}
+
+\newcommand{\rightarrowp}{\overset{P}{\to}}
+\newcommand{\rightarrowd}{\overset{d}{\to}}
+
+
+\usepackage{graphicx}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+
+
+\newcommand{\att}[1]{\begin{textblock*}{12cm}(0.5cm,9cm) % {block width} (coords)
+  {\tiny Source: #1}
+      \end{textblock*}}
+
+
+\newcommand{\foot}[1]{\begin{textblock*}{12cm}(0.5cm,9cm) % {block width} (coords)
+  {\tiny #1}
+      \end{textblock*}}
+
+
+\newcommand{\key}[1]{\begin{textblock*}{12cm}(0.5cm,9.1cm) % {block width} (coords)
+    {\scriptsize Key Concepts: #1}
+\end{textblock*}}
+
+
+
+\newcommand{\papers}[1]{\begin{textblock*}{12cm}(0.5cm,8.6cm) % {block width} (coords)
+    {\scriptsize Papers and Code: #1}
+\end{textblock*}}
+
+
+\newtheorem{assumptions}{Assumptions}
+
+\setbeamertemplate{headline}[default]
+\setbeamertemplate{footline}[page number]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{bibliography item}[text]
+
+\title{Modeling and Classification of Functional Data in Astronomy}
+\author{James Long}
+\institute{Texas A\&M University}
+\date{May 22, 2018}
+\begin{document}
+
+\frame{
+
+  \titlepage
+
+
+}
+
+
+\begin{frame}{Collaboration}
+
+%% astronomers
+%%   \begin{textblock*}{12cm}(0cm,1cm) % {block width} (coords)
+%% \begin{center}
+%% \textbf{Astronomy}
+%% \end{center}
+%% \end{textblock*}
+%%   \begin{textblock*}{3cm}(3.5cm,2cm) % {block width} (coords)
+%% \includegraphics[width=\w,height=\h]{figs/Macri.jpg}\\
+%% Lucas Macri
+%% \end{textblock*}
+%%   \begin{textblock*}{3cm}(7cm,2cm) % {block width} (coords)
+%% \includegraphics[width=\w,height=\h]{figs/Macri.jpg}\\
+%% Wenlong Yuan
+%% \end{textblock*}
+
+  \begin{textblock*}{3cm}(5.2cm,1.35cm) % {block width} (coords)
+    \textbf{Astronomers}
+  \end{textblock*}
+  
+  \begin{textblock*}{3cm}(1.5cm,2cm) % {block width} (coords)
+\includegraphics[width=\w,height=\h]{figs/Macri.jpg}\\
+$\, \, $Lucas Macri
+\end{textblock*}
+
+
+  \begin{textblock*}{3cm}(5cm,2cm) % {block width} (coords)
+ $\, $ \includegraphics[width=\w,height=\h]{figs/marshall.jpg}\\
+Jennifer Marshall
+\end{textblock*}
+
+  \begin{textblock*}{3cm}(8.5cm,2cm) % {block width} (coords)
+ $\, $\includegraphics[width=\w,height=\h]{figs/stringer.jpg}\\
+Katelyn Stringer
+\end{textblock*}
+
+  \begin{textblock*}{3cm}(2.8cm,5.5cm) % {block width} (coords)
+    \textbf{Statistician}
+  \end{textblock*}
+
+  \begin{textblock*}{3cm}(2.7cm,6.25cm) % {block width} (coords)
+\includegraphics[width=\w,height=\h]{figs/zhenfeng.jpg}\\
+$\, \, $Zhenfeng Lin
+\end{textblock*}
+
+%%   \begin{textblock*}{3cm}(5cm,6.25cm) % {block width} (coords)
+%% \includegraphics[width=\w,height=\h]{figs/long.jpg}\\
+%% $\, \, \, $James Long
+%% \end{textblock*}
+
+  \begin{textblock*}{3cm}(6cm,6.7cm) % {block width} (coords)
+\includegraphics[scale=.45]{figs/des_logo.png}\\
+\end{textblock*}
+
+  
+
+\end{frame}
+
+
+
+\begin{frame}{Outline}
+  \tableofcontents
+  \end{frame}
+
+%\frame{\tableofcontents}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+
+
+%%%%%%%%
+%%%%%%%% TODO: redo first section with more emphasis on multiband, lomb scargle
+%%%%%%%%
+
+
+
+\section{Distance Determination, Variable Stars, Milky Way Halo}
+
+\begin{frame}{What are the distances to these objects?}
+
+  \begin{center}
+    \includegraphics[scale=0.5]{figs/des_small.png}\\
+  \end{center}
+  \textbf{Problem:}
+  \begin{equation*}
+    \text{ brightness } \propto \frac{\text{luminosity}}{\text{distance}^2}
+  \end{equation*}
+\begin{center}
+  Only brightness can be directly measured.
+  \end{center}
+
+\foot{Image Source: DES Collaboration}
+\end{frame}
+
+\begin{frame}{One Solution}
+  \textbf{Standard Candle:} Class of objects with same luminosity
+  \begin{itemize}
+  \item Know absolute luminosity of standard candle.
+  \item Determine object is standard candle and estimate its brightness.
+  \item Solve for distance.
+  \end{itemize}
+
+%  \vspace{.1in}
+  
+  \begin{center}
+\includegraphics[scale=0.15]{figs/standard_candle.jpg}
+\end{center}
+
+ % \vspace{.1in}
+  
+  \textbf{RR Lyrae (RRL):} Standard candle star
+  \begin{itemize}
+  \item All RR Lyrae have (approximately) same luminosity
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{RR Lyrae (RRL) are Periodic Variable Stars}
+\textbf{Variable stars:} Stars that vary in brightness across time.\\
+\textbf{Periodic variables:} Repeat brightness variation over a fixed period.
+
+\vspace{.3in}
+
+\hspace{.3in} RRL Unfolded Light Curve \hspace{0.5in} RRL Folded Light Curve
+\vspace{-0.15in}
+
+\begin{center}
+\includegraphics[scale=.18]{figs/unfolded_13350.pdf} \hspace{.1in}
+\includegraphics[scale=.18]{figs/folded_13350.pdf}
+\end{center}
+
+  \begin{itemize}
+  \item \text{phase = (time modulo period) / period}
+  \item period estimated from unfolded light curve
+  \item star observed $\approx 250$ times in $5$ filters ($u,g,r,i,z$).
+\end{itemize}      
+
+  \begin{center}
+    \textbf{Distance to this star is proportional to mean magnitude.} %, after accounting for \underline{dust} and \underline{PL relation}.
+    \end{center}
+  
+\end{frame}
+
+%% \begin{frame}{RR Lyrae are Variable Stars}
+%% \textbf{Variable stars:} Stars that vary in brightness across time.
+%% \begin{center}
+%% \includegraphics[scale=.3]{figs/unfolded_13350.pdf}
+%% \end{center}
+
+
+%%   \begin{itemize}
+%%     \item Star observed $\approx 250$ times in $5$ filter ($u,g,r,i,z$).
+%%     \item \textit{light curve} $ = $ irregularly sampled vector valued function
+%%   \end{itemize}
+
+%% %% \begin{itemize}
+%% %% \item Star observed $\approx 250$ times in $5$ filters, $u,g,r,i,z$.
+%% %% \item Data for star is $D=\{t_{jb},m_{jb},\sigma_{jb}\}_{j=1}^{n_b}$ for $b=1,\ldots,B$.
+%% %% \item Observe brightness $m_{jb}$ at time $t_{jb}$ with uncertainty $\sigma_{jb}$ in filter $b$.
+%% %% \end{itemize}
+%% \end{frame}
+
+
+%% \begin{frame}{RR Lyrae are Periodic Variables}
+%% \textbf{Periodic variables:} Repeat brightness variation over a fixed period.\\
+
+%% \begin{center}
+%% \includegraphics[scale=.3]{figs/folded_13350.pdf}\\
+%% \begin{center}
+%% \text{phase = (time modulo period) / period}
+%% \end{center}
+%% \textbf{Folded light curve:} Plot of brightness versus phase.\\
+
+%% \vspace{.05in}
+
+%% Distance to this star is proportional to mean magnitude. %, after accounting for \underline{dust} and \underline{PL relation}.
+%% \end{center}
+%% \end{frame}
+
+
+
+
+
+\begin{frame}{Sloan Digital Sky Survey (SDSS) III -- Stripe 82}
+  \begin{textblock*}{8cm}(0cm,1.5cm) % {block width} (coords)
+  \begin{itemize}
+\item Discovered $\approx 60,000$ variable stars
+\item $\approx 250$ measurements / star
+\item Variables belong to different \textbf{classes}
+  \end{itemize}
+  \end{textblock*}
+
+  \begin{textblock*}{4cm}(7.5cm,.6cm) % {block width} (coords)
+  \begin{center}
+    \includegraphics[scale=0.18]{figs/des_observing_strategy.png}
+  \end{center}
+  \end{textblock*}
+
+  \begin{textblock*}{12cm}(.5cm,3.4cm) % {block width} (coords)
+  \begin{center}
+    \includegraphics[scale=0.3]{figs/stripe82.pdf}
+  \end{center}
+    \end{textblock*}
+%\underline{Example Light Curve}
+%\vspace{-.1in}
+  \begin{textblock*}{12cm}(.5cm,6.5cm) % {block width} (coords)
+    \begin{center}
+\small{Star {\color{red} X} Light Curve (Unfolded and Folded)}: Not an RR Lyrae\\
+\includegraphics[scale=.15]{figs/unfolded_1654418.pdf}
+\includegraphics[scale=.15]{figs/folded_1654418.pdf}
+\end{center}
+  \end{textblock*}
+  
+%\att{See Ivezic \cite{ivezic2007sloan}}
+
+\end{frame}
+
+
+
+
+%% \begin{frame}{SDSS--III Stripe 82}
+%% \begin{itemize}
+%% \item Discovered $\approx 60,000$ variables
+%% \item Variables belong to different \textbf{classes}
+%% \item Some periodic, some not
+%% \end{itemize}
+
+%% \underline{Three Examples}
+
+%% \vspace{-.1in}
+
+%% \begin{center}
+%% {\small 1) Eclipsing Binary (Unfolded and Folded)}\\
+%% \includegraphics[scale=.15]{figs/unfolded_4183016.pdf}
+%% \includegraphics[scale=.15]{figs/folded_4183016.pdf}
+%% \end{center}
+
+%% \vspace{-.2in}
+
+%% %% \begin{center}
+%% %% RR Lyrae\\
+%% %% \includegraphics[scale=.15]{figs/unfolded_4099.pdf}
+%% %% \includegraphics[scale=.15]{figs/folded_4099.pdf}
+%% %% \end{center}
+
+
+%% \begin{center}
+%% {\small 2) Quasar (unfolded)} \hspace{9 mm} {\small 3) RR Lyrae (folded)}\\
+%% \includegraphics[scale=.15]{figs/unfolded_7904669.pdf}
+%% \includegraphics[scale=.15]{figs/folded_13350.pdf}
+%% \end{center}
+
+%% \att{See Ivezic \cite{ivezic2007sloan}}
+
+%% \end{frame}
+
+\begin{frame}{Identifying RRL}
+  \textbf{Features} derived from light curves separate RR Lyrae from non-RRL.
+
+  \vspace{.2in}
+  
+  \includegraphics[scale=.2]{figs/sdss_color_period.png}
+  \includegraphics[scale=.2]{figs/sdss_gamp_period.png}
+\end{frame}
+
+%% \begin{frame}{Identifying RRL, Mapping MW Halo with SDSS}
+%%   Sesar 2010:
+%%   \begin{enumerate}
+%%   \item Computed features for $\approx 60,000$ stars (e.g. amplitude, period)
+%%   \item Identified $\approx 350$ RR Lyrae
+%%   \item Estimated Distances to RRL, Produce MW Halo Maps
+%%   \end{enumerate}
+
+%%   \begin{center}
+%%   \underline{Steps 1 and 2}\\
+%%   \includegraphics[scale=.2]{figs/sdss_color_period.png}
+%%   \includegraphics[scale=.2]{figs/sdss_gamp_period.png}
+%%     \end{center}
+  
+%% %%   \begin{columns}
+%% %%     \begin{column}{0.5\textwidth}
+
+%% %%       \vspace{-.22in}
+
+%% %%       \begin{center}
+%% %%         \underline{Steps 1 and 2}
+%% %%         \includegraphics[scale=.2]{figs/sdss_color_period.png}
+%% %%       \end{center}
+%% %%       \end{column}
+%% %%     \begin{column}{0.5\textwidth}
+
+%% %%       \vspace{-.55in}
+
+%% %%       \begin{center}
+%% %%       \underline{Step 3}
+%% %%       \end{center}
+      
+%% %%       \vspace{-.35in}
+%% %%       \begin{center}
+%% %%       \includegraphics[scale=.11]{figs/density_true_points.png}\\
+%% %%       \includegraphics[scale=.183]{figs/sesar_map.png}
+%% %%       \end{center}
+%% %%     \end{column}
+%% %% \end{columns}
+
+%% %\att{Sesar 2010 \cite{sesar2010light}}
+  
+%% \end{frame}
+
+\begin{frame}{Milky Way Halo Map from Sesar 2010 \cite{sesar2010light}}
+
+  \vspace{-.1in}
+
+  \begin{center}
+    RR Lyrae Locations in Stripe 82
+    \includegraphics[scale=.3]{figs/stripe82_rr.pdf}\\
+    Map of the Milky Way Halo
+    \includegraphics[scale=.135]{figs/density_true_points.png}
+%      \includegraphics[scale=.11]{figs/density_true.png}
+      \includegraphics[scale=.195]{figs/sesar_map.png}
+  \end{center}
+\att{Bottom right image taken from Sesar 2010 \cite{sesar2010light}.}
+\end{frame}
+
+%% \begin{frame}{Importance of MW Halo Maps}
+%% \todo{compare cosmological simulations to observed structure}
+%% \end{frame}
+
+%% \begin{frame}{Mapping Milky Way Halo with RRL}
+
+%%   \begin{center}
+%%     \includegraphics[scale=0.2]{figs/des_observing_strategy.png}
+%%     \end{center}
+  
+%% \begin{center}
+%%   \includegraphics[scale=.13]{figs/density_true_points.png}\\
+%%   \includegraphics[scale=.2]{figs/sesar_map.png}
+%% \end{center}
+
+%% %% \begin{itemize}
+%% %% \item Compare maps to cosmological simulations.
+%% %% \item Answer missing satellites problem.
+%% %% \end{itemize}
+
+%% \att{Sesar \cite{sesar2010light}}
+
+%% \end{frame}
+
+
+
+
+%% \begin{frame}{Mapping the Galactic Halo: Statistical Challenges}
+%% \begin{itemize}
+%% \item Classification: Identify RR Lyrae lightcurves.
+%% \item Parametric Inference: Estimate periods, mean magnitudes, distances.
+%% \item Nonparametric Inference: Construct 3--D density map.
+%% \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}{The Dark Energy Survey}
+%% \todo{picture of telescope}
+%% \end{frame}
+
+
+\begin{frame}{Project Goal: Map Galactic Halo with DES}
+
+\textbf{Dark Energy Survey (DES)}
+\begin{itemize}
+\item ongoing survey (started 2013, 5 years of planned observing)
+\item 5000 square degrees ($\approx$ 1/9$^{th}$ entire sky)
+\item depths to 24 mag in $i$
+\item $\approx$ 150 million stars
+\item $\approx$ 10 observations in each filter ($g$,$r$,$i$,$z$,$Y$) over five years
+\end{itemize}
+
+\vspace{.1in}
+\includegraphics[scale=0.2]{figs/des_observing_strategy.png}
+\includegraphics[scale=0.2]{figs/unfolded_des_2.pdf}
+%% see one-class/des for code for des image
+
+\vspace{.1in}
+
+\begin{center}
+  DES is \underline{deeper and wider} but \underline{sparsely sampled}.
+\end{center}
+
+\end{frame}
+
+
+%% \section{Functional Data Analysis}
+
+%% %% \begin{frame}{Univariate Data: Observations are Scalars}
+%% %%   \begin{columns}
+%% %%     \begin{column}{0.4\textwidth}
+%% %%       \begin{center}
+%% %%       \includegraphics[scale=0.5]{figs/age1.png}
+
+%% %%       \end{center}
+%% %%       \end{column}
+
+%% %%     \begin{column}{0.6\textwidth}
+%% %%           \begin{center}
+%% %%   \includegraphics[scale=0.4]{figs/heights_hist.pdf}    
+%% %%       \end{center}
+%% %%     \end{column}
+%% %% \end{columns}
+
+%% %% \end{frame}
+
+
+
+
+
+
+%% \begin{frame}{Multivariate Data: Iris Data}
+
+%%   \begin{columns}
+%%     \begin{column}{0.5\textwidth}
+%%       \begin{center}
+%%   \includegraphics[scale=0.33]{figs/iris.png}
+%%       \end{center}
+%%       \end{column}
+
+%%     \begin{column}{0.5\textwidth}
+%%           \begin{center}
+%%   \includegraphics[scale=0.35]{figs/iris_scatter.pdf}
+%%       \end{center}
+%%     \end{column}
+%% \end{columns}
+
+%% \begin{center}
+%%   Columns are unordered.
+%% \end{center}
+  
+%% \end{frame}
+
+%% \begin{frame}{Functional Data: Child Growth Data}
+
+%%   \begin{center}
+%%     \includegraphics[scale=0.4]{figs/functional.png}\\
+%%       Columns are ordered.
+%%     \end{center}
+
+  
+%% \end{frame}
+
+%% \begin{frame}{Functional Data: Observations are Functions}
+
+%%   \begin{center}
+%%     \includegraphics[scale=0.45]{figs/heights_plot.pdf} \\
+%%       Each observation (child) is a function from age to height.
+%%     \end{center}
+
+%% \end{frame}
+
+
+%% \begin{frame}{Derivatives of Growth}
+
+%%   \begin{center}
+%%     \includegraphics[scale=0.45]{figs/dheights_plot.pdf} \\
+%%       This analysis is impossible with standard multivariate data (eg \texttt{iris}).
+%%     \end{center}
+
+%% \end{frame}
+
+
+
+%% \begin{frame}{Light Curves Are Functional Data}
+
+%%   \begin{itemize}
+%%   \item light curves are functions from time to brightness
+%%   \item since brightness measured in several filter, multivariate functional data
+%%   \item sparsely, irregularly sampled in time
+%%   \item (sometimes) densely sampled in phase
+%%   \end{itemize}
+
+%% \begin{center}
+%%   \begin{tabular}{ c | c }
+%% %    RR Lyrae Example 1 & RR Lyrae Example 2\\
+%%     \includegraphics[scale=0.15]{figs/unfolded_4099.pdf}     & \includegraphics[scale=0.15]{figs/unfolded_13350.pdf} \\ 
+%% \includegraphics[scale=0.15]{figs/folded_4099.pdf} & \includegraphics[scale=0.15]{figs/folded_13350.pdf} \\ 
+%%   \end{tabular}
+%% \end{center}
+  
+%% \end{frame}
+
+%% \begin{frame}{Functional Data Analysis Tools}
+
+%%   \begin{columns}
+%%     \begin{column}{0.5\textwidth}
+%%       \begin{itemize}
+%%       \item \textbf{phase / amplitude registration}
+%%       \item \textbf{fourier} / spline basis
+%%       \item smoothing methods
+%%       \item derivative estimation
+%%       \item visualization tools
+%%       \item functional linear models
+%%       \item functional PCA
+%%       \end{itemize}
+%%     \end{column}
+
+%%     \begin{column}{0.5\textwidth}
+%%       \begin{center}
+%%         \includegraphics[scale=0.3]{figs/fda.png}
+%%         \end{center}
+%%     \end{column}
+%% \end{columns}
+
+  
+  
+%% \end{frame}
+
+
+
+\section{Functional Data Model}
+
+
+%%\subsection{Modeling of Functions}
+
+
+\begin{frame}{The Challenge}
+  Given $\approx$ 150 millions functions similar to:
+
+  \begin{center}
+  \includegraphics[scale=0.2]{figs/unfolded_des_7.pdf}
+  \end{center}
+
+  \begin{enumerate}
+  \item Find the RR Lyrae
+  \item Estimate distances to RRL
+  \item Produce Maps of MW Halo Structure
+  \end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Existing Approach: Fourier Feature Extraction}
+
+\textbf{Method:} $K$ harmonic Fourier expansion in each filter:
+
+\begin{equation*}
+m_{jb} = \beta_b + \sum_{k=1}^K a_{bk}\sin(k \omega t_{jb} + \phi_{bk}) + \sigma_{jb}\epsilon_{jb}
+\end{equation*}
+where $\epsilon_{jb} \sim N(0,1)$, independent.
+
+\begin{itemize}
+\item Data $D=\{\{t_{jb},m_{jb},\sigma_{jb}\}_{j=1}^{n_b}\}_{b=1}^B$
+\item $(2K + 1)B + 1$ total parameters:
+  \begin{itemize}
+  \item 1 frequency ($\omega$)
+  \item $B$ means ($\beta_b$)
+  \item $KB$ amplitudes ($a_{bk}$)
+  \item $KB$ phases ($\phi_{bk}$)
+    \end{itemize}
+\item Maximum likelihood estimation:
+  \begin{itemize}
+\item Closed form at fixed $\omega$
+\item Grid search on $\omega$
+\end{itemize}
+\end{itemize}
+
+
+  \begin{textblock*}{3cm}(7.5cm,3.8cm) % {block width} (coords)
+\includegraphics[scale=.15]{figs/rrlyrae_nomodel_fit.pdf}\\
+\includegraphics[scale=.15]{figs/rrlyrae_model_fit.pdf}\\
+  \vspace{-.1in}
+{\tiny $K=2.$ 26 Total Parameters}
+  \end{textblock*}
+
+
+
+
+\foot{Many names in astronomy: Lomb--Scargle, Generalized Lomb--Scargle, Analysis of Variance, CLEAN. See \cite{mondrik2015multiband,zechmeister2009generalised,lomb1976least,scargle1982studies,schwarzenberg1996fast}}
+
+\end{frame}
+
+%% \begin{frame}
+%%   \begin{center}
+%% \includegraphics[scale=.25]{figs/rrlyrae_nomodel_fit.pdf}\\
+%% \includegraphics[scale=.25]{figs/rrlyrae_model_fit.pdf}\\
+%% Total of $26$ parameters, model estimates period well.
+%% \end{center}
+%% \end{frame}
+
+\begin{frame}{Features Do Not Separate RRL in DES Data}
+
+\begin{center}
+  Sparse temporal sampling induces noise in Fourier features, causing large class overlap.
+  \end{center}
+
+\vspace{0.15in}
+
+\hspace{.42in}  Well Sampled SDSS Data \hspace{.33in} Sparsely Sampled DES Data
+\vspace{-.15in}
+\begin{center}
+\includegraphics[scale=0.38]{figs/features_lomb_full.pdf}
+\includegraphics[scale=0.38]{figs/features_lomb_downsampled.pdf}
+\end{center}
+
+\begin{center}
+\underline{Conclusion:} We cannot use Fourier features to find RRL in DES.
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Build RR Lyrae Model with Densely Sampled Data}
+ \begin{center}
+  \begin{tabular}{ c | c }
+    RR Lyrae Example 1 & RR Lyrae Example 2\\
+    \includegraphics[scale=0.15]{figs/unfolded_4099.pdf}     & \includegraphics[scale=0.15]{figs/unfolded_13350.pdf} \\ 
+\includegraphics[scale=0.15]{figs/folded_4099.pdf} & \includegraphics[scale=0.15]{figs/folded_13350.pdf} \\ 
+  \end{tabular}
+ \end{center}
+
+ \textbf{Common for all RR Lyrae?} Shape, difference in filter means. \\
+\textbf{What varies?} Distance, dust, amplitude, period, phase.
+\end{frame}
+
+\begin{frame}{Parsimonious RR Lyrae Model: 5 Free Parameters}
+
+
+\begin{center}
+global parameters fit once for all RR Lyrae\\
+\includegraphics[scale=.4]{figs/rr_model.png}\\
+individual parameters fit for each RR Lyrae
+\end{center}
+
+\vspace{.2in}
+
+\begin{itemize}
+\item $D=\{\{t_{jb},m_{jb},\sigma_{jb}\}_{j=1}^{n_b}\}_{b=1}^B$
+\item Model:
+\begin{equation*}
+m_{jb} = m_b(t_{jb}) + \epsilon_{jb}\sigma_{jb}
+\end{equation*}
+where $\epsilon_{jb} \sim N(0,1)$ i.i.d.
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{$\gamma_b(t) = $ median of functions at time $t$ in filter $b$}
+  \begin{center}
+  \includegraphics[scale=0.2]{figs/aligned_amp_medianu.pdf}\\
+  \includegraphics[scale=0.2]{figs/aligned_amp_mediang.pdf}
+  \includegraphics[scale=0.2]{figs/aligned_amp_medianr.pdf}\\
+  \includegraphics[scale=0.2]{figs/aligned_amp_mediani.pdf}
+  \includegraphics[scale=0.2]{figs/aligned_amp_medianz.pdf}
+  \end{center}
+  \end{frame}
+
+
+
+
+\begin{frame}{Derived $\gamma_b$ Functions}
+  \begin{center}
+    \includegraphics[scale=0.3]{figs/sdss_templates.pdf}
+    \end{center}
+\end{frame}
+
+
+
+\begin{frame}{Fit Model to New Stars Using Least Squares}
+
+\vspace{-.1in}
+  
+  \begin{equation*}
+         \argmin{\substack{\V{\mu},\M{E[B-V],} \\ \V{a},\V{\omega},\V{\phi}}} \sum_{j,b}\left(\frac{m_{jb} - \V{\mu} - M_b(\V{\omega}) - \M{E[B-V]}R_b - \V{a}\gamma_b(\V{\omega} t_{jb} + \V{\phi})}{\sigma_{jb}}\right)^2
+       \end{equation*}
+
+  \begin{itemize}
+  \item Objective function has many local minima in $\omega$, so grid search across frequency:
+    \begin{center}
+      \includegraphics[scale=0.2]{figs/freq_rss.png}
+      \end{center}
+  \item At fixed $(\V{\omega},\V{\phi})$, model is linear in $(\V{\mu},\V{a},\M{E[B-V]})$.
+  \item Warm--start Gauss--Newton $\V{\phi}$ updates at each gridpoint $\V{\omega}$.
+  \item About 1 minute / star in \texttt{R} implementation.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{R Code, Python Wrapper, Demos on Github}
+
+  \begin{center}
+    \includegraphics[scale=0.3]{figs/github_model1.png}\\
+
+    \vspace{.2in}
+    
+  \includegraphics[scale=0.3]{figs/github_model2.png}
+  \end{center}
+
+  
+\end{frame}
+
+\begin{frame}{Example Fits}
+  \begin{center}
+    Well Sampled Star
+  \includegraphics[scale=0.23]{figs/github_well_unfolded.png}
+  \includegraphics[scale=0.23]{figs/github_well_folded.png}\\
+    Sparsely Sampled Star
+  \includegraphics[scale=0.23]{figs/github_sparse_unfolded.png}
+  \includegraphics[scale=0.23]{figs/github_sparse_folded.png}\\
+  \end{center}
+\end{frame}
+
+
+%% \begin{frame}{Example Fit to SDSS Light Curves}
+%%   \begin{center}
+%%     \includegraphics[scale=0.2]{figs/1_one_unfolded.pdf}\\
+%%   \includegraphics[scale=0.2]{figs/1_one.pdf}
+%% \end{center}
+%% \end{frame}
+
+%% \begin{frame}{Example Fit to SDSS Light Curves}
+%% \begin{center}
+%%     \includegraphics[scale=0.2]{figs/2_one_unfolded.pdf}\\
+%%   \includegraphics[scale=0.2]{figs/2_one.pdf}
+%% \end{center}
+%% \end{frame}
+
+%% \begin{frame}{Example Fit to SDSS Light Curves}
+%% \begin{center}
+%%     \includegraphics[scale=0.2]{figs/3_one_unfolded.pdf}\\
+%%   \includegraphics[scale=0.2]{figs/3_one.pdf}
+%% \end{center}
+%% \end{frame}
+
+%% \begin{frame}{Example Fit to SDSS Light Curves}
+%% \begin{center}
+%%     \includegraphics[scale=0.2]{figs/4_one_unfolded.pdf}\\
+%%   \includegraphics[scale=0.2]{figs/4_one.pdf}
+%% \end{center}
+%% \end{frame}
+
+
+
+\begin{frame}{Feature Extraction with Model}
+
+  \begin{itemize}
+     \item Parameter fits $(\widehat{a},\widehat{\omega})$ provide useful class information.
+     \item Lack of fit measures, e.g.
+       \begin{equation*}
+         RSS  = \sum_{b=1}^B \sum_{j=1}^{n_b}\left(\frac{m_{jb} - \widehat{m}_{jb}}{\sigma_{jb}}\right)^2
+       \end{equation*}
+   used for separating RRL from non--RRL.
+  \end{itemize}
+
+  \begin{center}
+\hspace{.28in} \underline{RR Lyrae, Low RSS} \hspace{0.3in} \underline{Non RR Lyrae, High RSS}\\
+    \includegraphics[scale=0.23]{figs/github_sparse_folded.png}
+    \includegraphics[scale=0.235]{figs/github_sparse_folded_notrr.png}
+  \end{center}
+  %% \item Model is still approximate.
+  %%   \begin{itemize}
+  %%     \item Median residual: $0.034$
+  %%     \item Median photometric error: $0.014$
+  %%   \end{itemize}
+
+
+
+\end{frame}
+
+
+
+
+
+%%\subsection{Classification of Functions}
+
+
+
+%% \begin{frame}{Visualization of Warm Start for $\phi$}
+
+%% \end{frame}
+
+\section{Results on SDSS Stripe 82 and DES}
+
+
+\subsection{SDSS Stripe 82: Simulation}
+
+\begin{frame}{Simulate SDSS Stripe 82 Data to Resemble DES}
+
+  \begin{textblock*}{3cm}(4cm,1.5cm) % {block width} (coords)
+  \includegraphics[scale=0.2]{figs/des_observing_strategy.png}
+\end{textblock*}
+
+
+
+  \begin{textblock*}{12cm}(2cm,5.2cm) % {block width} (coords)
+Downsample Stripe 82 variables to 20 observations:
+\end{textblock*}
+
+  \begin{textblock*}{3cm}(1cm,5.9cm) % {block width} (coords)
+\includegraphics[scale=.15]{figs/unfolded_13350.pdf}
+\end{textblock*}
+
+
+  \begin{textblock*}{3cm}(5.5cm,6.3cm) % {block width} (coords)
+\includegraphics[scale=.15]{figs/rightarrow.png}
+\end{textblock*}
+
+  \begin{textblock*}{3cm}(6.75cm,5.9cm) % {block width} (coords)
+\includegraphics[scale=.15]{figs/unfolded_13350down.pdf}
+\end{textblock*}
+
+  \begin{textblock*}{12cm}(.5cm,8.1cm) % {block width} (coords)
+\begin{itemize}
+\item Can we estimate periods and distances accurately for RR Lyrae?
+\item Can we classify RR Lyrae / reproduce halo maps?
+\end{itemize}
+\end{textblock*}
+
+\end{frame}
+
+
+\begin{frame}{Results for Period Estimation}
+
+
+
+\begin{center}
+Comparison of period estimates for 379 RR Lyrae\\
+\includegraphics[scale=.4]{figs/period_est_comparison.pdf}
+\end{center}
+
+
+\end{frame}
+
+
+\begin{frame}{Simulation Results for Distance Estimation}
+\begin{itemize}
+\item Use model to estimate distance modulus ($\mu$) for RR Lyrae.
+\item Convert $\mu$ to distance (d) in parsecs: $d = 10^{\mu/5 + 1}$.
+\end{itemize}
+
+\begin{center}
+  \includegraphics[scale=.33]{figs/distance_comparison.pdf}
+  \includegraphics[scale=.33]{figs/distance_comparison_hist.pdf}
+\end{center}
+
+
+
+\end{frame}
+
+
+%% \begin{frame}{Results for Classification}
+
+%% \begin{center}
+%% Downsampled 1000 Not--RR Lyrae and 350 RR Lyrae
+%% \includegraphics[scale=.33]{figs/period_vs_EBV.pdf}
+%% \includegraphics[scale=.33]{figs/a_vs_dev_log.pdf}
+%% \end{center}
+
+%% \begin{itemize}
+%% \item Visually good separation with small number of features.
+%% \item Potential to use model output as feature input to classifier.
+%% %\item Hernitschek \cite{hernitschek2016finding} used structure functions to classify sparsely sampled RR Lyrae in Pan--STARRS.
+%% \end{itemize}
+%% \end{frame}
+
+
+
+%% \begin{frame}{Results for Constructing Milky Way Halo Maps}
+%%   \def \tw {.1}
+  
+%%   \begin{figure}[t]
+%% %\begin{center}
+%%   %\centering
+%%   \begin{minipage}{0.5\textwidth}
+%%  \subfloat[RRL Locations, SDSS Stripe 82]{\label{fig:density_true_points}
+%%  \includegraphics[scale=\tw]{figs/density_true_points.png}
+%%  %  \rule{4cm}{3cm}`
+%%  }\\
+%%  \subfloat[Overdensities, SDSS Stripe 82]{\label{fig:density_true}
+%%  \includegraphics[scale=.1]{figs/density_true.png}
+%%  %  \rule{4cm}{3cm}`
+%%  }
+%%   \end{minipage}
+
+  
+%% %  \hspace{\fill}
+%%   \begin{minipage}{0.5\textwidth}
+%%  \subfloat[RRL Location, Downsampled SDSS Stripe 82]{\label{fig:density_rr_model_sampled_points}
+%%  \includegraphics[scale=.1]{figs/density_rr_model_sampled_points.png}
+%% %   \rule{4cm}{3cm}
+%%  }\\
+%%     \subfloat[Overdensities, Downsampled SDSS Stripe 82]{\label{fig:density_rr_model_sampled}
+%%  \includegraphics[scale=.1]{figs/density_rr_model_sampled.png}
+%% %   \rule{4cm}{3cm}
+%%  }
+%%  \end{minipage}
+%% \caption{(a) Location of RRL stars in SDSS Stripe 82. The light curves used to make this map were well sampled so the classifications and distance estimates are quite accurate (i.e. all black points are actually RRL and their location on this map is close to their true location) (b) Overdensities (relative to the oblate MW halo model) represented by redder regions.   (c) The same map in (a) but constructed using poorly sampled light curves. Some of the classifications are incorrect (i.e. some black points are not in fact RRL) and distances contain more scatter. (d) The overdensities determined using sparsely sampled light curves.}
+%% %\end{center}
+%% \end{figure}
+
+
+%% \end{frame}
+
+
+
+
+
+\begin{frame}{Reproducing Milky Way Halo Maps}
+\underline{Select 379 RR Lyrae and 1000 non--RR Lyrae from SDSS Stripe 82.}
+\begin{enumerate}
+  \item Fit RR Lyrae Model to light curves
+  \item Extract features: model parameters, goodness--of-fit, etc.
+  \item Build Random Forest Classifier
+  \item Classify RRL / not-RRL for out--of--bag data (cross--validation)
+  \item Estimate distances to stars classified as RRL
+  \item Construct MW Halo map
+\end{enumerate}
+
+\vspace{.1in}
+
+\textbf{Summary of Steps 1--4:} 
+
+\vspace{-.1in}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{center}
+\includegraphics[scale=0.25]{figs/amp_rssn.pdf}
+      \end{center}
+      \end{column}
+
+    \begin{column}{0.5\textwidth}
+          \begin{center}
+\begin{tabular}{lcc}
+\hline
+& \multicolumn{2}{c}{Predicted} \\ 
+Truth  & Not RRL & \multicolumn{1}{c}{RRL} \\ 
+\hline
+Not RRL  & 978 & 22 \\
+RRL  & 40 & 339 \\
+\hline 
+\end{tabular}
+      \end{center}
+    \end{column}
+\end{columns}
+
+
+  
+
+
+
+%% \begin{tabular}{lcc}
+%% \hline
+%%  & \multicolumn{2}{c}{Predicted} \\ 
+%% Truth  & blue & \multicolumn{1}{c}{orange} \\ 
+%% \hline
+%% blue  & $\phantom{0}2$ & $30$ & $\phantom{0}2$ \\
+%% orange  & $\phantom{0}3$ & $\phantom{0}1$ & $31$ \\
+%% \hline 
+%% \end{tabular}
+
+  %%    cl
+  %%     not  rr
+  %% not 970  49
+  %% rr   30 330
+
+
+\end{frame}
+
+\begin{frame}{Results for Constructing Milky Way Halo Maps}
+  \def \tw {.1}
+  \begin{center}
+  \begin{tabular}{ c | c }
+    Ground Truth & Estimates on Downsampled \\
+        \includegraphics[scale=\tw]{figs/density_true_points.png}     & \includegraphics[scale=\tw]{figs/density_rr_model_sampled_points.png}\\ 
+        \includegraphics[scale=\tw]{figs/density_true.png} & \includegraphics[scale=\tw]{figs/density_rr_model_sampled.png}\\
+  \end{tabular}
+ \end{center}
+\end{frame}
+
+%% \begin{frame}{True Map}
+%%   \begin{center}
+%%     \includegraphics[scale=0.23]{figs/density_true.png}
+%%     \end{center}
+%% \end{frame}
+
+%% \begin{frame}{Estimated Map}
+%%     \begin{center}
+%%       \includegraphics[scale=0.23]{figs/density_rr_model_sampled.png}
+%%       \end{center}
+%% \end{frame}
+
+%% \begin{frame}{Results for Constructing Milky Way Halo Maps}
+%%   \def \tw {.1}
+  
+%%   \begin{columns}
+%%     \begin{column}{0.5\textwidth}
+%%       \begin{center}
+%%         \includegraphics[scale=\tw]{figs/density_true_points.png}\\
+%%         RRL Locations, Original\\
+%%         \includegraphics[scale=\tw]{figs/density_true.png}\\
+%%         Overdensities, Original
+%%       \end{center}
+%%   \end{column}
+
+%%     \begin{column}{0.5\textwidth}
+%%       \begin{center}
+%%     \includegraphics[scale=\tw]{figs/density_rr_model_sampled_points.png}\\
+%%     RRL Locations, Downsampled\\
+    
+%%     Overdensities, Downsampled
+%%     \end{center}
+%%   \end{column}
+
+%% \end{columns}
+%% \end{frame}
+
+
+
+
+\subsection{Dark Energy Survey: Current Work and Preliminary Results}
+
+\begin{frame}{Overview of Data Analysis Pipeline}
+
+    \begin{textblock*}{3cm}(.8cm,1.15cm) % {block width} (coords)
+  \includegraphics[scale=0.33]{figs/Diagram1.png}
+  \end{textblock*}
+
+  
+%%   \begin{center}
+%%   \includegraphics[scale=0.32]{figs/Diagram1.png}
+%% \end{center}
+\end{frame}
+
+%% \begin{frame}{Construct Training Set By Cross Matching}
+%%   \begin{itemize}
+%%   \item Know ground truth classes for stars in Stripe 82 (orange region).
+%%   \item Develop classifier using these stars as training data.
+%%   \item Classify all stars in blue region, identify structures.
+%%   \end{itemize}
+%%   \begin{center}
+%%     \includegraphics[scale=0.27]{figs/des_observing_strategy.png}
+%%   \end{center}
+%% \end{frame}
+
+\begin{frame}{FORNAX Dwarf Spheroid Satellite Galaxy}
+  \begin{center}
+    \includegraphics[scale=0.27]{figs/des_observing_strategy_fornax2.png}
+  \end{center}
+  \begin{center}
+    Fornax is a satellite galaxy of the Milky Way.
+
+    \vspace{.1in}
+    
+    \textbf{Challenge:} Find structure (sets of gravitationally bound stars) around FORNAX.
+\end{center}
+  \att{Wikipedia: \url{https://upload.wikimedia.org/wikipedia/commons/4/45/Fornax_dwarf_galaxy.jpg}}
+\end{frame}
+
+\begin{frame}{FORNAX RR Lyrae Candidates}
+  \begin{itemize}
+  \item $\approx$ 1 million stars in FORNAX region
+  \item 841 RR Lyrae Candidates, plotted on left
+  \end{itemize}
+
+  \vspace{-.2in}
+  
+  \begin{center}
+  \includegraphics[scale=0.26]{figs/fornax_rr.png}
+\end{center}
+\foot{Courtesy Katelyn Stringer}
+\end{frame}
+
+
+
+%% \begin{frame}{Data Challenge}
+%%   \begin{itemize}
+%%   \item 3442 light curves from FORNAX region
+%%   \item Correctly identified 232/317 RR Lyrae in sample (blind test)
+%%   \item RRL estimated distances correspond with known distance to FORNAX (130--150 kpc)
+%%   \end{itemize}
+
+  
+%% \begin{minipage}{6in}
+%%   \raisebox{-0.5\height}{\includegraphics[scale=0.2]{figs/unfolded_des_7.pdf}}
+%%   \raisebox{-0.5\height}{\includegraphics[scale=0.3]{figs/fornax_rr_distances.pdf}}
+%%   %% \raisebox{-0.5\height}{\includegraphics[scale=\tw]{figs/unfolded_4099_g.pdf}}
+%%   %% \raisebox{-0.5\height}{\includegraphics[scale=\tw]{figs/rightarrow.png}}
+%%   %% \raisebox{-0.5\height}{\includegraphics[scale=\tw]{figs/unfolded_4099_g_down.pdf}}
+%% \end{minipage}
+
+%% \begin{center}  
+%%   \textbf{Current Challenge:} Find satellite galaxy of FORNAX.
+%% \end{center}
+
+%% \end{frame}
+
+\begin{frame}{Project Summary and Deliverables}  
+  \textbf{Summary of Work:}
+  \begin{itemize}
+  \item Constructed statistical model for variable star class RR Lyrae.
+  \item Demonstrated improvement relative to existing models on several metrics.
+  \item Co--led interdisciplinary team to construct DES data analysis pipeline for producing MW halo maps.
+  \end{itemize}
+
+\vspace{.1in}
+  
+\textbf{Deliverables:}
+  \begin{itemize}
+  \item Model fitting code (JPL sole author): \url{https://github.com/longjp/rr-templates}
+  \item Model construction code (JPL sole author): \url{https://github.com/longjp/rr-model}
+    \begin{itemize}
+    \item currently private repo, email me to request access
+    \end{itemize}
+  \item Full DES results with RRL catalog on \texttt{arxiv} in $\approx$ 3 weeks
+  \end{itemize}
+
+
+
+  %% \textbf{Related Work in Astronomy:}
+  %% \begin{itemize}
+  %%   \item B. Sesar 2017. ``Machine-learned Identification of RR Lyrae Stars from Sparse, Multi-band Data: The PS1 Sample'' Astrophysical Journal.
+  %% \end{itemize}
+  
+\end{frame}
+
+%% \section{Statistical Methodology Projects}
+
+%% \begin{frame}{Project 1: Positive--Unlabeled (PU) Learning}
+
+%%   \vspace{-.3in}
+
+%%   \begin{center}
+%%   \includegraphics[scale=0.5]{figs/learning.png}
+%% \end{center}
+
+%% \vspace{-.3in}
+
+%% \begin{center}
+%%   Developed methodology to estimate class proportions and construct consistent classifier in PU learning problem.
+%% \end{center}
+
+%%   \papers{preprint available \url{https://arxiv.org/abs/1801.09834}}
+%%   \key{positive--unlabeled learning, false discovery rate, multiple testing}
+%% \end{frame}
+
+
+%% \begin{frame}{Project 2: Approximate Models, Heteroskedasticity}
+
+%%   \vspace{-.3in}
+
+%%   ``All models are wrong, some models are useful.'' -- George Box
+  
+%%   \begin{center}
+%%   \includegraphics[scale=0.3]{figs/hetero.png}
+%% \end{center}
+
+%% \vspace{-.3in}
+
+%% \begin{center}
+%%   Developed optimal weighting for fitting approximate models to observations with heteroskedastic errors.
+%% \end{center}
+
+%%   \papers{single author publication in Electronic Journal of Statistics}
+%%   \key{sandwich estimators, heteroskedasticity, weighted least squares}
+%% \end{frame}
+
+
+
+
+
+%% \begin{frame}{Astrostatistics}
+
+%%   \begin{itemize}
+%%   \item ASA Astrostatistics Interest Group
+%%     \url{http://community.amstat.org/astrostats/home}
+%%     \includegraphics[scale=0.3]{figs/asa_astrostat.png}
+%%   \item ASAIP \url{https://asaip.psu.edu/}\\
+    
+%%     \includegraphics[scale=0.3]{figs/asaip.png}
+    
+    
+%%   %% \item Backgroup Reading
+%%   %%   \begin{itemize}
+%%   %%   \item Framework for Inference in Astrophysics by Schafer
+%%   %%   \item Statistics in Astronomy by Long, de Souza
+%%   %%   \end{itemize}
+%%  \end{itemize}
+  
+%% \end{frame}
+
+
+
+
+\begin{frame}[plain]
+
+  \begin{center}
+    {\huge Thank you. Questions?}
+    \end{center}
+
+\end{frame}
+
+
+%% \section{Ongoing and Related Work}
+
+%% \begin{frame}{Related Work}
+
+%% \textbf{Period Estimation Algorithms / Variable Star Models:}
+%% \begin{itemize}
+%% \item Sinusoid Based Methods
+%% \begin{itemize}
+%% \item Lomb Scargle (LS) \cite{lomb1976least,scargle1982studies}
+%% \item Generalized LS (GLS) \cite{zechmeister2009generalised}
+%% \item Multifilter Extensions \cite{vanderplas2015periodograms,long2014estimating}.
+%% \item AoV \cite{schwarzenberg1996fast}
+%% \end{itemize}
+%% \item ``Non--parametric'' methods
+%% \begin{itemize}
+%% \item Phase Dispersion Minimization \cite{stellingwerf1978period}
+%% \item Supersmoother \cite{sesar2010light}
+%% \end{itemize}
+%% \item Template Based Methods
+%% \begin{itemize}
+%% \item RR Lyrae templates by Sesar \cite{sesar2010light}, Kovacs \cite{kovacs2007computation}
+%% \item Cepheid templates by Pejcha \cite{pejcha2012global}, Yoachim \cite{yoachim2009panoply}
+%% \end{itemize}
+%% \end{itemize}
+
+%% \vspace{.1in}
+
+%% \textbf{Finding RR Lyrae in Sparsely Sampled Light Curves:}
+%% \begin{itemize}
+%% \item Hernitschek \cite{hernitschek2016finding} uses structure functions to find RRL / QSO.
+%% \item Sesar \cite{sesar2016machine} mapping MW halo with Pan--STARRS, developed RRL templates.
+%% \end{itemize}
+
+
+%% \end{frame}
+
+%% \begin{frame}{Ongoing and Upcoming Work}
+%% \begin{itemize}
+%% \item Model refinements:
+%% \begin{itemize}
+%% \item $M_b$ dependence on period, metallicity.
+%% \item Filters other than $g,i,u,r,z$
+%% \end{itemize}
+%% \item Milky Way Halo Maps
+%% \begin{itemize}
+%% \item Estimation of halo 
+%% \item Treat as Prediction Problem: Evaluate distance / density estimates using Stripe 82 data or follow--up observations.
+%% \end{itemize}
+%% \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}{Conclusions}
+%% \begin{itemize}
+%% \item Models for specific variable star classes:
+%% \begin{itemize}
+%% \item Pros: better parameter estimates, improved classification
+%% \item Cons: difficult to build, more computation time
+%% \end{itemize}
+%% \item 
+%% \item Survey cadence selection
+%% \end{itemize}
+%% \end{frame}
+
+
+\begin{frame}[allowframebreaks]{Bibliography}
+%  \def\newblock{\hskip .11em plus .33em minus .07em}
+%  \nocite{*}
+%\nocite{*}
+\bibliographystyle{plain} 
+  \tiny{
+  \bibliography{refs}}
+\end{frame}
+
+%% \section*{Additional Results}
+
+%% \begin{frame}{Dependence Assumption}
+%% \todo{write here}
+%% \end{frame}
+
+%% \begin{frame}{Are uncertainties estimated correctly?}
+%% \todo{show example from SDSS suggesting they are.}
+%% \end{frame}
+
+
+%% \begin{frame}{$K=1,2,3$ Misspecified Model Results}
+%% \input{figs/period_est_results.tex}
+%% \end{frame}
+
+
+\end{document}
