@@ -5,7 +5,7 @@
 
 ``` r
 if (!requireNamespace("devtools")) install.packages("devtools")
-devtools::install_github("longjp/template")
+devtools::install_github("longjp/rmd-template")
 ```
 
 The templates are now available in RStudio by going to File -> New File -> R Markdown -> From Template. 
