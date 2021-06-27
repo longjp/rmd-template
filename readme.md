@@ -1,7 +1,7 @@
-## template
+## rmd-template
 
 
-`template` contains R Markdown templates. To install these templates on your system:
+contains R Markdown templates. To install these templates on your system:
 
 ``` r
 if (!requireNamespace("devtools")) install.packages("devtools")
