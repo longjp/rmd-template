@@ -82,7 +82,7 @@ grid.arrange(p1,p2,ncol=2)
 
 ## Kaplan-Meier Plots
 
-Typically make Kaplan-Meier survival curves using `survfit` function in package survival. Here we use ``ggsurv` from `GGally` package. Other options:
+Typically make Kaplan-Meier survival curves using `survfit` function in package survival. Here we use `ggsurv` from `GGally` package. Other options:
 
 * R base graphics `plot` function. All colors and axis labels must be written manually. Requires a lot of code.
 * autoplot in ggfortify. Somewhat a pain to use with multiple covariates [https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables](https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables)
@@ -107,7 +107,8 @@ plot(p)
 fit  <- survfit(Surv(futime,death) ~sex, 
               data=mgus)
 p <- ggsurv(fit)
-p + scale_color_discrete(name="Howdy")
+p
+#p + scale_color_discrete(name="sex")
 ```
 
 ```{r km-multiple}
@@ -117,68 +118,10 @@ fit  <- survfit(Surv(futime,death) ~sex+old,
 p <- ggsurv(fit)
 p
 ## note: changing legend name is tricky because both colour and linetype must be specified as Groups
-p + coord_cartesian(xlim=c(0,5000)) + labs(colour='Groups',linetype='Groups')
+p + coord_cartesian(xlim=c(0,5000)) + labs(colour='Groups',linetype='Groups') + theme(legend.position = c(0.2, 0.4))
 ```
 
-Use line type and color to distinguish curves `r todo("still writing")`:
-
-```{r km-multiple-color-lty}
-## multiple covariates, only use color to distinguish
-fit  <- survfit(Surv(futime,death) ~ sex+old, 
-              data=mgus)
-fit  <- survfit(Surv(futime,death) ~ interaction(sex,old), 
-              data=mgus)
-p <- ggsurv(fit)
-p
-p <- ggsurv(fit,surv.col=c(1,1,2,2),lty.est=c(1,1,2,2))
-p
-p + coord_cartesian(xlim=c(0,5000))
-```
-
-
-
-```{r km-surv,eval=FALSE,include=FALSE}
-library(survival)
-library(survminer)
-
-## one curve
-mgus$old <- mgus$dxyr > median(mgus$dxyr)
-fit  <- survfit(Surv(futime,death) ~1, 
-              data=mgus)
-p <- ggsurvplot(fit)
-names(p)
-## the plot element of the list p contains the ggplot
-p <- p$plot
-plot(p) ## has different theme than standard ggplot
-
-
-## changes to default theme
-## https://ggplot2.tidyverse.org/reference/ggtheme.html
-p <- p + theme_grey() 
-plot(p)
-
-## single covariate
-fit  <- survfit(Surv(futime,death) ~sex, 
-              data=mgus)
-p <- ggsurvplot(fit)
-names(p)
-## the plot element of the list p contains the ggplot
-p <- p$plot
-plot(p) ## has different theme than standard ggplot
-## changes to default theme
-## https://ggplot2.tidyverse.org/reference/ggtheme.html
-p <- p + theme_grey() 
-plot(p)
-
-## multiple covariates
-fit  <- survfit(Surv(futime,death) ~sex+old, 
-              data=mgus)
-p <- ggsurvplot(fit)
-p <- p$plot
-p <- p + theme_grey() 
-plot(p)
-```
-
+`r todo("add examples with number at risk. also add examples with competing risk models. see fjord/2021-01-chung-local/LocalControl")`
 
 ## pairs Plots
 
