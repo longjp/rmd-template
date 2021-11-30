@@ -82,11 +82,10 @@ grid.arrange(p1,p2,ncol=2)
 
 ## Kaplan-Meier Plots
 
-Typically make Kaplan-Meier survival curves using `survfit` function in package survival. Here we use `ggsurv` from `GGally` package. Other options:
+Typically make Kaplan-Meier survival curves using `survfit` function in package survival. We use `ggsurv` from `GGally` package and `ggsurvplot` from `survminer`. `ggsurvplot` can make a number at risk table below plot, which is helpful for understanding uncertainty.
 
 * R base graphics `plot` function. All colors and axis labels must be written manually. Requires a lot of code.
 * autoplot in ggfortify. Somewhat a pain to use with multiple covariates [https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables](https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables)
-* `ggsurvplot` in `survminer`: Do not like default theme, choice of category labels. Zooming using `coord_cartesian` does not automatically update tick mark labels, returns complex object, not just ggplot. Might be useful for adding patient at risk numbers to bottom of plot.
 
 
 ```{r km-ggally}
@@ -121,7 +120,20 @@ p
 p + coord_cartesian(xlim=c(0,5000)) + labs(colour='Groups',linetype='Groups') + theme(legend.position = c(0.2, 0.4))
 ```
 
-`r todo("add examples with number at risk. also add examples with competing risk models. see fjord/2021-01-chung-local/LocalControl")`
+
+Now use `ggsurvplot` to include number at risk table below plots:
+
+
+```{r ggsurvplot}
+library(survminer)
+fit  <- survfit(Surv(futime,death) ~sex, 
+              data=mgus)
+ggsurvplot(fit,data=mgus,risk.table=TRUE,ylim=c(0,1),
+           legend.title="",legend.labs=c("Female","Male"))
+
+```
+
+`r todo("add examples with competing risk models. see fjord/2021-01-chung-local/LocalControl")`
 
 ## pairs Plots
 
