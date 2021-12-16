@@ -161,6 +161,47 @@ p <- ggpairs(iris,
 p
 ```
 
+## Dotplots with ggplot
+
+```{r dotplot}
+library(ggplot2)
+head(iris)
+
+## simple dotplot
+p <- ggplot(data=iris,aes(y=Sepal.Length,x=Species)) + 
+      geom_dotplot(binaxis='y',
+                   position=position_dodge(0.7),
+                   stackdir="center",dotsize=.7,
+                   binwidth=diff(range(iris$Sepal.Length)/50)) +
+      labs(x=paste0("Species of Flower"),
+           y=paste0("Sepal Length"))
+print(p)
+
+## add medians
+p <- p + stat_summary(fun=median,geom="point",
+                      aes(group=Species),
+                      color="red",size=2,shape=4,show.legend = FALSE)
+print(p)
+```
+
+```{r dotplot-with-fill}
+## dotplots will fill and medians
+mtcars2 <- mtcars
+mtcars2$cyl <- as.factor(mtcars2$cyl)
+mtcars2$am <- as.factor(mtcars2$am)
+p <- ggplot(data=mtcars2,aes(y=mpg,x=cyl,fill=am,color=am)) +
+      geom_dotplot(binaxis='y',
+                   position=position_dodge(0.7),
+                   stackdir="center",dotsize=.7,
+                   binwidth=diff(range(mtcars2$mpg)/50))
+p <- p + stat_summary(fun=median,geom="point",
+                          aes(group=am),
+                          position=position_dodge(.7),
+                          color="black",size=2,shape=4,show.legend=FALSE)
+print(p)
+```
+
+
 ## ggplot2 Notes
 
 ggplot2 language
