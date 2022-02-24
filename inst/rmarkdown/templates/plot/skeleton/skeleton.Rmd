@@ -306,6 +306,23 @@ kbl(cars)%>%
   scroll_box(height="200px",width="40%")
 ```
 
+
+```{r scroll-table-missing}
+library(kableExtra)
+dat <- cars
+dat[sample(1:nrow(dat),10),1] <- NA
+
+num_na <- apply(dat,2,function(x){sum(is.na(x))})
+num_na <- data.frame("number missing"=num_na,
+                     "fraction missing"=round(num_na/nrow(dat),2))
+num_na <- num_na[order(num_na[,1],decreasing=TRUE),]
+kbl(num_na)%>%
+  kable_paper(bootstrap_options="striped",full_width = F) %>%
+  scroll_box(height="200px",width="40%")
+```
+
+
+
 ### Summary Tables
 
 [gtsummary](https://cran.r-project.org/web/packages/gtsummary/index.html) makes tables to summarize models coefficient fits and variable distributions.
