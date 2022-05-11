@@ -133,15 +133,41 @@ p[[1]] <- p[[1]] + theme(legend.position="none")+ ylab("Survival XXX")
 print(p)
 ```
 
-
+Break down by gender and make group category labels look nice:
 
 ```{r ggsurvplot}
 library(survminer)
 fit  <- survfit(Surv(futime,death) ~sex, 
               data=mgus)
 p <- ggsurvplot(fit,data=mgus,risk.table=TRUE,ylim=c(0,1),
-                legend.title="",legend.labs=c("Female","Male"))
+                legend.title="",legend.labs=levels(mgus$sex))
 print(p)
+```
+
+
+When zooming in, need to redefine tick mark locations on x-axis. Also change theme to get nice grid lines.
+
+```{r ggsurvplot2}
+library(survminer)
+library(survival)
+library(ggplot2)
+fit  <- survfit(Surv(futime,death)~sex, 
+              data=mgus)
+p <- ggsurvplot(fit,data=mgus,risk.table=TRUE,ylim=c(0,1),xlim=c(0,5000),
+                break.x.by=1000,xlab="Time (days)",
+                legend.title="Gender",legend.labs=levels(mgus$sex))
+p$plot <- p$plot + theme_grey() + theme(legend.position = c(0.8, 0.8))
+print(p)
+
+??ggsurvplot
+
+## see if we can do example with pval=TRUE
+```
+
+Now only plot survival curve, not at risk table
+
+```{r}
+plot(p$plot)
 ```
 
 `r todo("add examples with competing risk models. see fjord/2021-01-chung-local/LocalControl")`
