@@ -117,7 +117,8 @@ fit  <- survfit(Surv(futime,death) ~sex+old,
 p <- ggsurv(fit)
 p
 ## note: changing legend name is tricky because both colour and linetype must be specified as Groups
-p + coord_cartesian(xlim=c(0,5000)) + labs(colour='Groups',linetype='Groups') + theme(legend.position = c(0.2, 0.4))
+p + coord_cartesian(xlim=c(0,5000)) + labs(colour='Groups',linetype='Groups') + 
+  theme(legend.position = c(0.2, 0.4),legend.title=element_blank())
 ```
 
 
