@@ -384,6 +384,16 @@ add_p_ex1 <-
 add_p_ex1
 ```
 
+### Word Tables
+
+Using the code above and flextable, we can output the gtsummary table to word. To reduce size of cells in word, right click on tables, table properties, row, and then specify 0.25in exact height.
+
+```{r word-table}
+library(flextable)
+tab <- as_flex_table(add_p_ex1)
+save_as_docx(tab,path="table1.docx")
+```
+
 ### Latex Tables
 
 kableExtra can output tables in latex. Useful for tables going into papers.
