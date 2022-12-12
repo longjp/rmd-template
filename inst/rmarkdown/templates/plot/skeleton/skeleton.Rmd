@@ -318,27 +318,35 @@ kbl(iris)%>%
   add_header_above(c(" "=1,"Sepal"=2,"Petal"=2))
 ```
 
-Table from table function. Illustrates how to group columns using name which is itself variable.
+Output pretty contingency tables in kable format:
 ```{r table-table}
 library(kableExtra)
-tab <- table(supp=ToothGrowth$supp,dose=ToothGrowth$dose)
-tab
-rcnames <- names(dimnames(tab))
-dn <- rcnames[2]
-myHeader <- c(" "=1,dn=dim(tab)[2])
-names(myHeader) <- c(" ",dn)
-## if rownames indicate variable e.g. "Surgery" variables is "Surgery" or "No Surgery"
-kbl(tab) %>%
-  kable_paper(bootstrap_options="striped",full_width = F) %>%
-  add_header_above(header=myHeader)
-## if rownames do not indicate variable e.g. "Surgery" variables is 0 or 1
-## then make rownames Surgery=0 and Surgery=1
-rownames(tab) <- paste0(rcnames[1],"=",rownames(tab))
-kbl(tab) %>%
-  kable_paper(bootstrap_options="striped",full_width = F) %>%
-  add_header_above(header=myHeader)
+library(tidyverse)
 
+
+dat <- data.frame("M1"=c("Correct","Correct","Correct","Correct","Incorrect","Incorrect"),
+                  "M2"=c("Correct","Correct","Correct","Incorrect","Incorrect","Incorrect"))
+vvar <- c("M1","M2")
+vname <- c("Model 1","Model 2")
+
+tab <- table(dat[,vvar[1]],dat[,vvar[2]])
+tab
+tab <- as.data.frame(tab)
+colnames(tab) <- c(vname,"n")
+tab <- tibble(tab)
+tab <- tab %>% pivot_wider(names_from = vname[2], values_from = n)
+tab
+tab <- tab %>% 
+    rename("\t" = vname[1]) %>% 
+    add_column(" " = c(vname[1], rep(" ", nrow(.) - 1)), .before = "\t") %>% 
+    kable() %>% 
+    kable_styling(position = "left", full_width = F, ) %>% 
+    add_header_above(c("","","",vname[2], rep(" ", ncol(tab) - 3))) %>% 
+    column_spec(1:2, bold = TRUE) 
+tab
 ```
+
+
 
 ### Scrolling Tables
 
