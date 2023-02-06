@@ -69,7 +69,25 @@ print(doc, target = "plots.pptx")
 
 ## Grid of ggplots
 
+Suggest using `cowplot` function `plot_grid` for grid of ggplots because can align axes nicely. I do not see a benefit of gridExtra.
+
+```{r}
+library(cowplot)
+library(gridExtra)
+p1 <- ggplot(cars,aes(x=speed,y=dist)) +
+  geom_point()
+p2 <- ggplot(cars,aes(x=dist,y=speed)) +
+  geom_point()
+p <- list(p1,p2,p2,p1)
+## does not look nice because axis are not vertically aligned
+##grid.arrange(grobs=p,ncol=2)
+## looks much better
+plot_grid(plotlist=p, ncol=2, align="v")
+```
+
+
 ```{r grid}
+## example of gridExtra, but suggest using cowplot (above) instead
 library(ggplot2)
 library(gridExtra)
 
@@ -78,49 +96,27 @@ p1 <- ggplot(cars,aes(x=speed,y=dist)) +
 p2 <- ggplot(cars,aes(x=dist,y=speed)) +
   geom_point()
 grid.arrange(p1,p2,ncol=2)
+
+## specify plots as list, nice when there are a lot of plots
+p <- list(p1,p2)
+grid.arrange(grobs=p,ncol=2)
 ```
+
+
 
 ## Kaplan-Meier Plots
 
-Typically make Kaplan-Meier survival curves using `survfit` function in package survival. We use `ggsurv` from `GGally` package and `ggsurvplot` from `survminer`. `ggsurvplot` can make a number at risk table below plot, which is helpful for understanding uncertainty.
-
-* R base graphics `plot` function. All colors and axis labels must be written manually. Requires a lot of code.
-* autoplot in ggfortify. Somewhat a pain to use with multiple covariates [https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables](https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables)
+Typically make Kaplan-Meier survival curves using `survfit` function in package survival. Plotting options:
 
 
-```{r km-ggally}
-library(survival)
-library(GGally)
-
-## one curve
-mgus$old <- mgus$dxyr > median(mgus$dxyr)
-fit  <- survfit(Surv(futime,death) ~1, 
-              data=mgus)
-p <- ggsurv(fit)
-plot(p)
-```
+* Preferred method: `ggsurvplot` from `survminer`. Can make a number at risk table below plot, which is helpful for understanding uncertainty.
+* Backup method: `ggsurv` from `GGally` package
+* Other options (examples not shown here):
+    * R base graphics `plot` function. All colors and axis labels must be written manually. Requires a lot of code.
+    * `autoplot` in ggfortify. Somewhat a pain to use with multiple covariates [https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables](https://stackoverflow.com/questions/50110752/ggfortify-doesnt-support-survfit-multiple-covariables)
 
 
-```{r km-single}
-## single covariate
-fit  <- survfit(Surv(futime,death) ~sex, 
-              data=mgus)
-p <- ggsurv(fit)
-p
-#p + scale_color_discrete(name="sex")
-```
-
-```{r km-multiple}
-## multiple covariates, only use color to distinguish
-fit  <- survfit(Surv(futime,death) ~sex+old, 
-              data=mgus)
-p <- ggsurv(fit)
-p
-## note: changing legend name is tricky because both colour and linetype must be specified as Groups
-p + coord_cartesian(xlim=c(0,5000)) + labs(colour='Groups',linetype='Groups') + 
-  theme(legend.position = c(0.2, 0.4),legend.title=element_blank())
-```
-
+### ggsurvplot
 
 Now use `ggsurvplot` to include number at risk table. The object returned by `ggsurvplot` is a list with 2 ggplots. So we can modify each of these ggplots to change axis labels, legend, etc.
 
@@ -156,13 +152,9 @@ fit  <- survfit(Surv(futime,death)~sex,
               data=mgus)
 p <- ggsurvplot(fit,data=mgus,risk.table=TRUE,ylim=c(0,1),xlim=c(0,5000),
                 break.x.by=1000,xlab="Time (days)",
-                legend.title="Gender",legend.labs=levels(mgus$sex))
+                legend.title="Gender",legend.labs=levels(mgus$sex),pval=TRUE)
 p$plot <- p$plot + theme_grey() + theme(legend.position = c(0.8, 0.8))
 print(p)
-
-??ggsurvplot
-
-## see if we can do example with pval=TRUE
 ```
 
 Now only plot survival curve, not at risk table
@@ -170,6 +162,44 @@ Now only plot survival curve, not at risk table
 ```{r}
 plot(p$plot)
 ```
+
+### ggsurv
+
+```{r km-ggally}
+library(survival)
+library(GGally)
+
+## one curve
+mgus$old <- mgus$dxyr > median(mgus$dxyr)
+fit  <- survfit(Surv(futime,death) ~1, 
+              data=mgus)
+p <- ggsurv(fit)
+plot(p)
+```
+
+
+```{r km-single}
+## single covariate
+fit  <- survfit(Surv(futime,death) ~sex, 
+              data=mgus)
+p <- ggsurv(fit)
+p
+#p + scale_color_discrete(name="sex")
+```
+
+```{r km-multiple}
+## multiple covariates, only use color to distinguish
+fit  <- survfit(Surv(futime,death) ~sex+old, 
+              data=mgus)
+p <- ggsurv(fit)
+p
+## note: changing legend name is tricky because both colour and linetype must be specified as Groups
+p + coord_cartesian(xlim=c(0,5000)) + labs(colour='Groups',linetype='Groups') + 
+  theme(legend.position = c(0.2, 0.4),legend.title=element_blank())
+```
+
+
+### Competing Risk Models
 
 `r todo("add examples with competing risk models. see fjord/2021-01-chung-local/LocalControl")`
 
@@ -294,7 +324,33 @@ base + geom_point(aes(colour = txt))
 ```
 
 
-## Tables
+## gtsummary
+
+[gtsummary](https://cran.r-project.org/web/packages/gtsummary/index.html) makes tables to summarize models coefficient fits and variable distributions.
+
+```{r summary-table}
+library(gtsummary)
+a <- tbl_summary(cars[1:10,])
+knit_print(a)
+
+add_p_ex1 <-
+  trial[c("age", "grade", "trt")] %>%
+  tbl_summary(by = trt) %>%
+  add_p()
+
+add_p_ex1
+```
+
+Contingency table with gtsummary package:
+```{r table-table}
+library(gtsummary)
+dat <- data.frame("M1"=c("Correct","Correct","Correct","Correct","Incorrect","Incorrect"),
+                  "M2"=c("Correct","Correct","Correct","Incorrect","Incorrect","Incorrect"))
+tbl_cross(dat)
+```
+
+
+## kableExtra
 
 [kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.htmlhttps://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html) makes nice tables.
 
@@ -304,7 +360,7 @@ Simple Table
 ```{r simple-table}
 library(kableExtra)
 head(cars)
-kbl(cars) %>%
+kbl(cars[1:10,]) %>%
   kable_paper(bootstrap_options="striped",full_width = F)
 ```
 
@@ -312,39 +368,12 @@ Nice header joining columns:
 ```{r header-table}
 library(kableExtra)
 head(iris)
-iris <- iris[,c(5,1:4)]
-kbl(iris)%>%
+iris2 <- iris[1:10,c(5,1:4)]
+kbl(iris2)%>%
   kable_paper(bootstrap_options="striped",full_width = F) %>%
   add_header_above(c(" "=1,"Sepal"=2,"Petal"=2))
 ```
 
-Output pretty contingency tables in kable format:
-```{r table-table}
-library(kableExtra)
-library(tidyverse)
-
-
-dat <- data.frame("M1"=c("Correct","Correct","Correct","Correct","Incorrect","Incorrect"),
-                  "M2"=c("Correct","Correct","Correct","Incorrect","Incorrect","Incorrect"))
-vvar <- c("M1","M2")
-vname <- c("Model 1","Model 2")
-
-tab <- table(dat[,vvar[1]],dat[,vvar[2]])
-tab
-tab <- as.data.frame(tab)
-colnames(tab) <- c(vname,"n")
-tab <- tibble(tab)
-tab <- tab %>% pivot_wider(names_from = vname[2], values_from = n)
-tab
-tab <- tab %>% 
-    rename("\t" = vname[1]) %>% 
-    add_column(" " = c(vname[1], rep(" ", nrow(.) - 1)), .before = "\t") %>% 
-    kable() %>% 
-    kable_styling(position = "left", full_width = F, ) %>% 
-    add_header_above(c("","","",vname[2], rep(" ", ncol(tab) - 3))) %>% 
-    column_spec(1:2, bold = TRUE) 
-tab
-```
 
 
 
@@ -375,44 +404,111 @@ kbl(num_na)%>%
 
 
 
-### Summary Tables
 
-[gtsummary](https://cran.r-project.org/web/packages/gtsummary/index.html) makes tables to summarize models coefficient fits and variable distributions.
 
-```{r summary-table}
+## Table Output
+
+* Input Formats: 1) data.frame 2) gtsummary
+* Output formats: 1) html 2) latex 3) word
+
+We summarize the recommended functions / packages for handling these each setting.
+
+```{r}
+library(kableExtra)
+input <- c("data.frame","","","gtsummary","","")
+output <- rep(c("html","latex","word"),2)
+method <- c("kableExtra","kableExtra","flextable","---","huxtable","flextable")
+df <- data.frame(input=input,output=output,method=method)
+kbl(df) %>%
+  kable_paper(bootstrap_options="striped",full_width = F)
+```
+
+
+
+### data.frame
+
+html output
+```{r}
+library(kableExtra)
+head(cars)
+tab <- kbl(cars[1:10,]) %>%
+        kable_paper(bootstrap_options="striped",full_width = F)
+tab ## directly output to html
+```
+
+tex output
+```{r}
+## to 
+## good table advice https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf
+library(kableExtra)
+iris <- iris[,c(5,1:4)]
+caption <- "Iris data set  \\label{tab:iris}"
+tab <- kbl(iris[1:20,],booktabs=TRUE,format="latex",escape=FALSE,caption=caption) %>%
+    add_header_above(c(" "=1,"Sepal"=2,"Petal"=2))
+save_kable(tab,file="iris.tex")
+```
+
+word output
+```{r}
+library(flextable)
+ft <- flextable(cars[1:10,])
+save_as_docx(ft,path="cars.docx")
+```
+
+### gtsummary
+
+
+html
+
+```{r}
 library(gtsummary)
-a <- tbl_summary(cars)
-knit_print(a)
-
 add_p_ex1 <-
   trial[c("age", "grade", "trt")] %>%
   tbl_summary(by = trt) %>%
   add_p()
 
 add_p_ex1
+
 ```
 
-### Word Tables
 
-Using the code above and flextable, we can output the gtsummary table to word. To reduce size of cells in word, right click on tables, table properties, row, and then specify 0.25in exact height.
+tex
+
+```{r}
+library(gtsummary)
+add_p_ex1 <-
+  trial[c("age", "grade", "trt")] %>%
+  tbl_summary(by = trt) %>%
+  add_p()
+ht <- as_hux_table(add_p_ex1)
+huxtable::bottom_padding(ht) <- 0
+huxtable::top_padding(ht) <- 0
+huxtable::right_padding(ht) <- 0
+huxtable::caption(ht) <- "Huxtable example."
+huxtable::label(ht) <- "tab:table1-within5"
+
+## convert to latex
+ht_latex <- ht %>% huxtable::to_latex()
+## remove some formatting
+ht_latex <- gsub("```{=latex}","",ht_latex,fixed=TRUE)
+ht_latex <- gsub("```","",ht_latex,fixed=TRUE)
+cat(ht_latex,file="huxtable-example.tex")
+
+## NOTE: run the below code and add these packages to latex file preamble
+## huxtable::report_latex_dependencies(quiet = FALSE, as_string = FALSE)
+```
+
+
+
+word: To reduce size of cells in word, right click on tables, table properties, row, and then specify 0.25in exact height.
 
 ```{r word-table}
 library(flextable)
+library(gtsummary)
+add_p_ex1 <-
+  trial[c("age", "grade", "trt")] %>%
+  tbl_summary(by = trt) %>%
+  add_p()
 tab <- as_flex_table(add_p_ex1)
 save_as_docx(tab,path="table1.docx")
-```
-
-### Latex Tables
-
-kableExtra can output tables in latex. Useful for tables going into papers.
-
-```{r latex-tables}
-## good table advice https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf
-library(kableExtra)
-data(iris)
-iris <- iris[,c(5,1:4)]
-caption <- "Iris data set  \\label{tab:iris}"
-tab <- kbl(iris[1:20,],booktabs=TRUE,format="latex",escape=FALSE,caption=caption) %>%
-    add_header_above(c(" "=1,"Sepal"=2,"Petal"=2))
-save_kable(tab,file="iris.tex")
 ```
