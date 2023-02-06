@@ -287,6 +287,64 @@ p2 <- ggplot(dat,aes(x=rating,color=reviewer,fill=reviewer)) +
 print(p2)
 ```
 
+
+## ROC Curves
+
+```{r}
+library(pROC)
+library(ggplot2)
+
+## ROC Curves
+true_class <- c(rep(0,50),rep(1,50))
+pred1 <- rnorm(100,mean=true_class)
+pred2 <- rnorm(100,mean=2*true_class)
+
+
+rocobj1 <- roc(true_class,pred1)
+rocobj2 <- roc(true_class,pred2)
+pred_names <- c("Pred1","Pred2")
+touse <- list(rocobj1,rocobj2)
+names(touse) <- pred_names
+g2 <- ggroc(touse)
+g2 <- g2 + xlab("Specificity (# Predicted S / # True S)") + ylab("Sensitivity (# Predicted U / # True U)")
+
+aucs <- rep(NA_real_,length(pred_names))
+for(ii in 1:length(aucs)){
+  aucs[ii] <- as.numeric(auc(touse[[ii]]))
+}
+
+labnames <- paste0(pred_names," (",paste0(rep("AUC=",length(aucs)),round(aucs,3)),")")
+g2 <- g2 + scale_color_discrete(name = "name", labels = labnames)
+g2 <- g2 + theme(legend.position = c(0.6, 0.2),legend.title=element_blank())
+print(g2)
+```
+
+
+## log axes
+
+```{r}
+library(ggplot2)
+n <- 1000
+df <- data.frame(x=abs(rt(n,df=1)),y=abs(rt(n,df=1)))
+ggplot(df,aes(x=x,y=y)) + 
+  geom_point()
+
+ggplot(df,aes(x=x,y=y)) + 
+  geom_point() +
+  scale_y_continuous(trans='log10') + scale_x_continuous(trans='log10')
+
+## suppress scientific notation
+options(scipen=999)
+ggplot(df,aes(x=x,y=y)) + 
+  geom_point() +
+  scale_y_continuous(trans='log10') + scale_x_continuous(trans='log10')
+
+ggplot(df,aes(x=x,y=y)) + 
+  geom_point() +
+  coord_trans(x="log10", y="log10")
+
+```
+
 ## ggplot2 Notes
 
 ggplot2 language
