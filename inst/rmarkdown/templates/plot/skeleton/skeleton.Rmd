@@ -506,10 +506,14 @@ tab <- kbl(iris[1:20,],booktabs=TRUE,format="latex",escape=FALSE,caption=caption
 save_kable(tab,file="iris.tex")
 ```
 
+
 word output
 ```{r}
 library(flextable)
 ft <- flextable(cars[1:10,])
+ft <- width(ft, width = 0.6)
+ft <- height(ft,height=0.25)
+ft <- hrule(ft, rule = "exact")
 save_as_docx(ft,path="cars.docx")
 ```
 
@@ -567,6 +571,9 @@ add_p_ex1 <-
   trial[c("age", "grade", "trt")] %>%
   tbl_summary(by = trt) %>%
   add_p()
-tab <- as_flex_table(add_p_ex1)
-save_as_docx(tab,path="table1.docx")
+ft <- as_flex_table(add_p_ex1)
+#ft <- width(ft, width = 0.6)
+ft <- height(ft,height=0.25)
+ft <- hrule(ft, rule = "exact")
+save_as_docx(ft,path="table1.docx")
 ```
