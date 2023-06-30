@@ -269,6 +269,36 @@ p <- p + stat_summary(fun=median,geom="point",
 print(p)
 ```
 
+
+## Boxplots
+
+Single boxplot
+```{r}
+library(ggpubr)
+p <- ggboxplot(iris,x="Species",y="Sepal.Length",color="Species", 
+               legend="none",add="dotplot",title="Sepal Length",xlab="")
+print(p)
+```
+
+Set of boxplots with pvalues
+```{r}
+library(ggpubr)
+my_comparisons <- list(c("versicolor","virginica"),
+                       c("setosa","versicolor"),
+                       c("setosa","virginica"))
+targets <- colnames(iris)[1:4]
+ps <- vector("list",length=length(targets))
+for(ii in 1:length(targets)){
+  ps[[ii]] <- ggboxplot(iris,x="Species",y=targets[ii],color="Species", 
+                        legend="none",add="dotplot",title=targets[ii],xlab="")
+  ps[[ii]] <- ps[[ii]] + stat_compare_means(comparisons=my_comparisons,method="t.test") +
+    scale_y_continuous(expand = expansion(mult = c(0.05, 0.15)))
+  
+}
+p <- cowplot::plot_grid(plotlist=ps, ncol=2, align="v")
+print(p)
+```
+
 ## Barplots with ggplot2
 
 Discrete random variables can be displayed with a barplot rather than a histogram. Nice to break color bars by categorical variable to observe difference in discrete varible mean across levels of variable.
