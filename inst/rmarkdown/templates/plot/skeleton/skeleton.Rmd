@@ -350,6 +350,31 @@ print(g2)
 ```
 
 
+## Volcano Plots
+
+```{r}
+library(ggplot2)
+library(ggrepel)
+## simulate data
+log2foldChange <- c(runif(50,min=-6,6),
+                    runif(950,min=-3,3))
+res <- data.frame(gene=paste0("gene",1:1000),
+                  pvalue=c(rexp(50,rate=1000),runif(950)),
+                  log2foldChange=log2foldChange)
+res$padj <- p.adjust(res$pvalue,method="fdr")
+## make plot
+res$delabel <- NA_character_
+ix <- res$padj < 0.05
+ix[is.na(ix)] <- FALSE
+res$delabel[ix] <- res$gene[ix]
+p <- ggplot(res,aes(x=log2foldChange,y=-log10(padj),label=delabel)) +
+  geom_point() +
+  geom_hline(yintercept=-log10(0.05), col="red") + 
+  xlab("Log2(fold change)") + 
+  geom_text_repel(size=2)
+print(p)
+```
+
 ## log axes
 
 ```{r}
