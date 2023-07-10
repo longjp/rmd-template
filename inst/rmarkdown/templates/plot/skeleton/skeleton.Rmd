@@ -353,25 +353,52 @@ print(g2)
 ## Volcano Plots
 
 ```{r}
+## simulate data (in log2 space)
+## for performing differential expression
+X <- matrix(rnorm(25*500),ncol=500)
+Y <- cbind(matrix(rnorm(25*50,mean=1),ncol=50),
+           matrix(rnorm(25*450),ncol=450))
+dat <- rbind(X,Y)
+colnames(dat) <- paste0("gene",1:ncol(dat))
+group <- c(rep("groupX",25),rep("groupY",25))
+```
+
+
+```{r}
+## determine p-values and fold changes
+## assumes data is in log2 space
+res <- data.frame("gene"=colnames(dat),
+                  "pvalue"=rep(NA_real_,ncol(dat)),
+                  "log2foldChange"=rep(NA_real_,ncol(dat)))
+for(ii in 1:ncol(dat)){
+  temp <- dat[,ii,drop=TRUE]
+  res[ii,2] <- t.test(temp~group,var.equal=TRUE)$p.value
+  res[ii,3] <- mean(temp[group=="groupX"]) - mean(temp[group=="groupY"])
+}
+
+res$padj <- p.adjust(res$pvalue,method="fdr")
+```
+
+
+```{r}
+res$foldChange <- 2^res$log2foldChange
 library(ggplot2)
 library(ggrepel)
-## simulate data
-log2foldChange <- c(runif(50,min=-6,6),
-                    runif(950,min=-3,3))
-res <- data.frame(gene=paste0("gene",1:1000),
-                  pvalue=c(rexp(50,rate=1000),runif(950)),
-                  log2foldChange=log2foldChange)
-res$padj <- p.adjust(res$pvalue,method="fdr")
+library(scales)
+
 ## make plot
 res$delabel <- NA_character_
 ix <- res$padj < 0.05
 ix[is.na(ix)] <- FALSE
 res$delabel[ix] <- res$gene[ix]
-p <- ggplot(res,aes(x=log2foldChange,y=-log10(padj),label=delabel)) +
+p <- ggplot(res,aes(x=foldChange,y=padj,label=delabel)) +
   geom_point() +
-  geom_hline(yintercept=-log10(0.05), col="red") + 
-  xlab("Log2(fold change)") + 
-  geom_text_repel(size=2)
+  geom_hline(yintercept=0.05, col="red") + 
+  xlab("Fold Change") + 
+  geom_text_repel(size=2) +
+  scale_x_continuous(trans='log2') + 
+  scale_y_continuous(trans=c("log10","reverse")) +
+  ylab("adjusted pvalue")
 print(p)
 ```
 
