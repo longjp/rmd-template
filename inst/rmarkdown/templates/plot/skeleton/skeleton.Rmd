@@ -597,6 +597,17 @@ ft <- width(ft, width = 0.6)
 ft <- height(ft,height=0.25)
 ft <- hrule(ft, rule = "exact")
 save_as_docx(ft,path="cars.docx")
+
+## add spanning header column
+cars2 <- cars
+colnames(cars2) <- paste0("Car Properties_",colnames(cars2))
+ft <- flextable(cars2[1:10,])
+ft <- separate_header(
+  x = ft,
+  split="_",
+  opts = c("span-top", "bottom-vspan"),
+  fixed=TRUE)
+save_as_docx(ft,path="cars-span.docx")
 ```
 
 ### gtsummary
@@ -659,3 +670,6 @@ ft <- height(ft,height=0.25)
 ft <- hrule(ft, rule = "exact")
 save_as_docx(ft,path="table1.docx")
 ```
+
+
+
