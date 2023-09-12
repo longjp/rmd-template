@@ -427,6 +427,68 @@ ggplot(df,aes(x=x,y=y)) +
 
 ```
 
+
+## Waterfall Plot
+
+```{r}
+library(ggplot2)
+
+set.seed(1234)
+dat <- data.frame(SizeChange=c(-100,rnorm(10),rnorm(10,mean=-50,sd=10),20,50),
+                  Response=c("CR",rep("SD",10),sample(c("PR","SD"),10,replace=TRUE),"PD","PD"),
+                  Arm=c("Arm A",rep("Arm B",5),rep("Arm A",5),rep("Arm C",12)))
+dat$Response <- factor(dat$Response,levels=c("CR","PR","SD","PD"))
+dat$x <- rank(dat$SizeChange)
+
+b <- ggplot(dat, aes(x=x, y=SizeChange,fill=Response)) +
+  labs(list(title = "Waterfall Plot for Best Response",x = NULL,
+            y = "Change from baseline (%)")) + xlab("") + ylab("Change from Baseline (%)") + 
+  geom_bar(stat="identity", width=0.7, position = position_dodge(width=0.4)) +
+  scale_x_discrete(labels=NULL) +
+  theme(legend.position = c(0.8, 0.4),legend.title = element_blank()) +
+  geom_point(data=dat,aes(x=x,y=SizeChange,shape=Arm),size=2,inherit.aes=FALSE) +
+  scale_shape_manual(values=c("A","B","C"))
+print(b)
+
+## also nice theme
+print(b + theme_minimal())
+```
+
+## Swimmer Plot
+
+```{r}
+
+library(ggplot2)
+
+## simulate data
+set.seed(1234)
+dat <- data.frame(SizeChange=c(-100,rnorm(10),rnorm(10,mean=-50,sd=10),20,50),
+                  Response=c("CR",rep("SD",10),sample(c("PR","SD"),10,replace=TRUE),"PD","PD"),
+                  Arm=c("Arm A",rep("Arm B",5),rep("Arm A",5),rep("Arm C",12)))
+dat$Survival <- rexp(nrow(dat))
+dat$Survival[dat$Response=="CR"] <- 7
+dat$Censor <- NA_real_
+dat$Censor[which.max(dat$Survival)] <- max(dat$Survival)
+dat$Response <- factor(dat$Response,levels=c("CR","PR","SD","PD"))
+dat$Event <- "Censor"
+dat$Subject <- 1:nrow(dat)
+
+## make swimmer plot
+dat <- dat[order(dat$Arm,dat$Survival),]
+dat$Subject <- factor(dat$Subject,levels=dat$Subject)
+p <- ggplot(dat,aes(x=Subject,y=Survival)) +
+  geom_bar(aes(fill=Response),
+           stat="identity",
+           position=position_dodge2(width=1.2,preserve="single")) +
+  ylab("Survival (time XXX)") + xlab("") + theme_classic() + 
+  theme(legend.title=element_blank(),legend.position = c(0.8, 0.6)) +
+  geom_point(data=dat,aes(x=Subject,y=Censor,shape=Event),na.rm=TRUE)
+#p <- p + scale_y_continuous(expand=c(0,1))
+p <- p + facet_grid(vars(Arm),scales = "free",space="free") + coord_flip()
+p <- p + scale_y_continuous(expand=expansion(mult = 0,add = c(0,1)))
+print(p)
+```
+
 ## ggplot2 Notes
 
 ggplot2 language
