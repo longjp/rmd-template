@@ -611,19 +611,23 @@ kbl(num_na)%>%
 ## Table Output
 
 * Input Formats: 1) data.frame 2) gtsummary
-* Output formats: 1) html 2) latex 3) word
+* Output formats: 1) html 2) latex 3) word 4) pdf/png
 
 We summarize the recommended functions / packages for handling these each setting.
 
 ```{r}
 library(kableExtra)
-input <- c("data.frame","","","gtsummary","","")
-output <- rep(c("html","latex","word"),2)
-method <- c("kableExtra","kableExtra","flextable","---","huxtable","flextable")
+input <- c("data.frame","","","","gtsummary","","","")
+output <- rep(c("html","latex","word","pdf/png"),2)
+method <- c("kableExtra","kableExtra","flextable","kableExtra+save_kable OR gridExtra::grid.table OR gt::gt",
+            "---","huxtable","flextable","?")
 df <- data.frame(input=input,output=output,method=method)
 kbl(df) %>%
   kable_paper(bootstrap_options="striped",full_width = F)
 ```
+
+
+
 
 
 
@@ -671,6 +675,26 @@ ft <- separate_header(
   fixed=TRUE)
 save_as_docx(ft,path="cars-span.docx")
 ```
+
+
+pdf/png output: first convert to kableExtra, then save_kable or gridExtra::grid.table
+```{r}
+library(kableExtra)
+
+## method 1
+tab <- kbl(cars[1:10,]) %>%
+        kable_material(bootstrap_options="striped",full_width = F)
+save_kable(tab,file="table1-1.pdf")
+
+## method 2
+gt::gtsave(gt::gt(cars[1:10,]),filename="table1-2.pdf")
+
+## method 3
+pdf("table1-3.pdf")
+gridExtra::grid.table(cars[1:10,])
+dev.off()
+```
+
 
 ### gtsummary
 
@@ -732,6 +756,21 @@ ft <- height(ft,height=0.25)
 ft <- hrule(ft, rule = "exact")
 save_as_docx(ft,path="table1.docx")
 ```
+
+
+
+
+```{r}
+library(flextable)
+library(gtsummary)
+add_p_ex1 <-
+  trial[c("age", "grade", "trt")] %>%
+  tbl_summary(by = trt) %>%
+  add_p()
+gt::gtsave(as_gt(add_p_ex1),filename="gt-table.pdf")
+```
+
+
 
 
 
