@@ -40,7 +40,7 @@ todo <- function(x){
 ```{r}
 ## put this code at top of .Rmd file to 
 ## create folder for saving work
-outf <- "seleton-output/"
+outf <- "skeleton-output/"
 unlink(outf,recursive=TRUE)
 dir.create(outf,recursive=TRUE)
 
