@@ -32,9 +32,22 @@ colorize <- function(x, color) {
 todo <- function(x){
   paste0("**",colorize(x,"todo"),"**")
 }
+```
 
-library(rvg)
-library(officer)
+
+## Saving Figures and Tables
+
+```{r}
+## put this code at top of .Rmd file to 
+## create folder for saving work
+outf <- "seleton-output/"
+unlink(outf,recursive=TRUE)
+dir.create(outf,recursive=TRUE)
+
+## save to outf
+pdf(paste0(outf,"example.pdf"),width=8,height=5)
+plot(1:10,1:10)
+invisible(dev.off())
 ```
 
 ## Latex in Plots
