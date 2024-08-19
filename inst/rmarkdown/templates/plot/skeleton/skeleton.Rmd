@@ -65,6 +65,9 @@ ggplot(dat,aes(x=beta1,y=beta2)) +
 
 ## Saving Plots to pptx
 
+
+### Basic ggplot
+
 ```{r save-plot}
 library(ggplot2)
 library(rvg)
@@ -79,6 +82,121 @@ doc <- ph_with(doc, my_vec_graph, location = ph_location_fullsize() )
 print(doc, target = "plots.pptx")
 ```
 
+
+### Custom Sizes, Standard + GGPlot, Captions
+
+
+```{r}
+doc_out <- read_pptx()
+
+
+## slide: table + bullets
+doc_out <- add_slide(doc_out, layout = "Two Content", master = "Office Theme")
+doc_out <- ph_with(x=doc_out,value=c("Table cars"),
+                   location=ph_location_type(type = "title"))
+doc_out <- ph_with(x=doc_out, value = names(cars),
+                   location = ph_location_left())
+doc_out <- ph_with(x=doc_out,value=cars,
+                   location=ph_location_right())
+
+
+## slide: base graphics
+anyplot <- plot_instr(code = {
+  col <- c(
+    "#440154FF", "#443A83FF", "#31688EFF",
+    "#21908CFF", "#35B779FF", "#8FD744FF", "#FDE725FF"
+  )
+  barplot(1:7, col = col, yaxt = "n")
+})
+doc_out <- add_slide(doc_out)
+doc_out <- ph_with(doc_out,anyplot,
+                   location=ph_location_fullsize(),
+                   bg="#006699")
+
+
+## slide: ggplot, title at top, default sizing, not editable
+doc_out <- add_slide(doc_out)
+pp <- ggplot(data = iris,aes(x=Sepal.Length,y=Petal.Length)) +
+  geom_point()
+doc_out <- ph_with(x=doc_out,value=pp,location = ph_location_type(type = "body"),
+                   bg = "transparent")
+doc_out <- ph_with(x=doc_out,value="graphic title",
+                   location = ph_location_type(type = "title"))
+
+
+## slide: ggplot, small caption, custom plot sizing, editable
+# location of image
+left <- 2
+top <- 1
+width <- 6
+height <- 4
+# what the caption says
+caption_text <- "This is the caption to the image."
+# create gg plot
+pp <- ggplot(data = iris,aes(x=Sepal.Length,y=Petal.Length)) +
+    geom_point()
+vec_graph <- dml(code=plot(pp))
+fp_3 <- fp_text(font.size = 15)
+bl <- block_list(fpar(ftext(caption_text, fp_3)))
+doc_out <- add_slide(doc_out)
+doc_out <- ph_with(x=doc_out,value=vec_graph,
+                   location=ph_location(left=left,top=top,width=width,height=height))
+doc_out <- ph_with(x=doc_out,value=bl,
+                   location=ph_location(left=left,top=top+height,width=width,height=1))
+
+
+
+
+print(doc_out, target = "plots-big.pptx")
+
+```
+
+
+
+
+## Heatmap
+
+
+
+```{r}
+library(ComplexHeatmap)
+
+## generate data and annotations
+p <- 10
+n <- 100
+dat_heat1 <- matrix(rnorm(n*p),nrow=n,ncol=p)
+dat_heat2 <- matrix(rnorm(n*p,mean=4),nrow=n,ncol=p)
+dat_heat3 <- rbind(matrix(rnorm((n/2)*p),nrow=n/2,ncol=p),
+                   matrix(rnorm((n/2)*p,mean=2),nrow=n/2,ncol=p))
+dat_heat <- cbind(dat_heat1,dat_heat2,dat_heat3)
+df <- data.frame(Strong=c(rep("g1",n/2),rep("g2",n/2)),
+                 None=sample(c("a1","a2"),replace=TRUE,size=n))
+# scramble rows
+ix <- sample(1:n)
+dat_heat <- dat_heat[ix,]
+df <- df[ix,]
+
+
+row_ha = rowAnnotation(df=df,
+                       col=list(Strong=c("g1"="green",
+                                         "g2"="orange"),
+                                None=c("a1"="pink",
+                                       "a2"="black")),
+                       show_annotation_name=FALSE)
+set.seed(1234)
+ht <- Heatmap(dat_heat,
+              show_row_names=FALSE,
+              column_title="Features",
+              row_title="Samples",
+              name="log2Expression",
+              right_annotation=row_ha,
+              show_column_names=FALSE,
+              row_km=2,column_km=3)
+draw(ht)
+pdf("heatmap-all-samples.pdf",width=4,height=8)
+draw(ht)
+invisible(dev.off())
+```
 
 ## Grid of ggplots
 
