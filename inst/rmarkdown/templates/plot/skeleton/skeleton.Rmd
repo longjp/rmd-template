@@ -808,20 +808,28 @@ save_as_docx(ft,path="cars-span.docx")
 ```
 
 
+
 pdf/png output: first convert to kableExtra, then save_kable or gridExtra::grid.table
 ```{r}
 library(kableExtra)
+library(magick)
 
-## method 1
-tab <- kbl(cars[1:10,]) %>%
-        kable_material(bootstrap_options="striped",full_width = F)
-save_kable(tab,file="table1-1.pdf")
+## method 1 (recommended): sizes table correctly
+temp <- cars[1:10,]
+tab <- kbl(temp,booktabs=TRUE,format="latex",escape=FALSE)
+tab %>% kable_styling(latex_options="scale_down") %>% 
+  kableExtra::as_image(file=paste0("table1-1.pdf"))
 
 ## method 2
-gt::gtsave(gt::gt(cars[1:10,]),filename="table1-2.pdf")
+tab <- kbl(cars[1:10,]) %>%
+        kable_material(bootstrap_options="striped",full_width = F)
+save_kable(tab,file="table1-2.pdf")
 
 ## method 3
-pdf("table1-3.pdf")
+gt::gtsave(gt::gt(cars[1:10,]),filename="table1-3.pdf")
+
+## method 4
+pdf("table1-4.pdf")
 gridExtra::grid.table(cars[1:10,])
 dev.off()
 ```
