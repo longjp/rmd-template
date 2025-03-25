@@ -666,6 +666,10 @@ library(gtsummary)
 a <- tbl_summary(cars[1:10,])
 knit_print(a)
 
+```
+
+```{r}
+library(gtsummary)
 add_p_ex1 <-
   trial[c("age", "grade", "trt")] %>%
   tbl_summary(by = trt) %>%
@@ -673,6 +677,30 @@ add_p_ex1 <-
 
 add_p_ex1
 ```
+
+Add number missing to same line. Good for tables with one group and all continuous
+```{r}
+library(gtsummary)
+library(dplyr)
+
+count_miss <- function(data, variable, by, ...) {
+  return(round(sum(is.na(data[[variable]]))))
+}
+
+dat <- iris[1:4]
+dat[1,1] <- NA_real_
+dat[1:3,2] <- NA_real_
+
+tab <- dat %>%
+  tbl_summary(missing="no") %>%
+  add_stat(fns = everything() ~ count_miss) %>%
+  modify_fmt_fun(update = add_stat_1 ~ function(x) style_number(x, digits = 0)) %>%
+  modify_header(add_stat_1 = "**Number Missing**", 
+                all_stat_cols() ~ "**{level}**") %>%
+  modify_header(stat_0 = "**Summary**")
+tab
+```
+
 
 Contingency table with gtsummary package:
 ```{r table-table}
