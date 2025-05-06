@@ -47,6 +47,12 @@ todo <- function(x){
   paste0("**",colorize(x,"todo"),"**")
 }
 
+
+outf <- "output-report/"
+unlink(outf,recursive=TRUE)
+dir.create(outf,recursive=TRUE)
+
+
 ```
 
 ## Resources
