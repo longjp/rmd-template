@@ -413,6 +413,25 @@ print(p)
 
 Set of boxplots with pvalues
 ```{r}
+head(iris)
+library(tidyr)
+library(ggpubr)
+iris_long <- pivot_longer(iris,cols=1:4)
+head(iris_long)
+my_comparisons <- list(c("versicolor","virginica"),
+                       c("setosa","versicolor"),
+                       c("setosa","virginica"))
+p <- ggboxplot(iris_long,x="Species",y="value",color="Species", 
+                        legend="none",add="dotplot",xlab="",
+               facet.by="name")
+p <- p + stat_compare_means(comparisons=my_comparisons,method="wilcox.test") +
+    scale_y_continuous(expand = expansion(mult = c(0.05, 0.15)))
+print(p)
+```
+
+
+Set of boxplots with pvalues (for loop)
+```{r}
 library(ggpubr)
 my_comparisons <- list(c("versicolor","virginica"),
                        c("setosa","versicolor"),
