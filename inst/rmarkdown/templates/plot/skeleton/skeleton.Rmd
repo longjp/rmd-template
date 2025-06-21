@@ -156,7 +156,7 @@ print(doc_out, target = "plots-big.pptx")
 
 ## Heatmap
 
-
+### Continuous
 
 ```{r}
 library(ComplexHeatmap)
@@ -197,6 +197,56 @@ pdf("heatmap-all-samples.pdf",width=4,height=8)
 draw(ht)
 invisible(dev.off())
 ```
+
+
+### Binary
+
+```{r}
+library(ComplexHeatmap)
+
+## generate data and annotations
+p <- 10
+n <- 100
+dat_heat1 <- matrix(rnorm(n*p),nrow=n,ncol=p)
+dat_heat2 <- matrix(rnorm(n*p,mean=4),nrow=n,ncol=p)
+dat_heat3 <- rbind(matrix(rnorm((n/2)*p),nrow=n/2,ncol=p),
+                   matrix(rnorm((n/2)*p,mean=2),nrow=n/2,ncol=p))
+dat_heat <- cbind(dat_heat1,dat_heat2,dat_heat3)
+df <- data.frame(Strong=c(rep("g1",n/2),rep("g2",n/2)),
+                 None=sample(c("a1","a2"),replace=TRUE,size=n))
+# scramble rows
+ix <- sample(1:n)
+dat_heat <- dat_heat[ix,]
+df <- df[ix,]
+
+
+dat_heat <- 1*(dat_heat > 1)
+
+row_ha = rowAnnotation(df=df,
+                       col=list(Strong=c("g1"="blue",
+                                         "g2"="red"),
+                                None=c("a1"="blue",
+                                       "a2"="red")),
+                       show_annotation_name=TRUE)
+set.seed(1234)
+ht <- Heatmap(dat_heat,
+              show_row_names=FALSE,
+              column_title="Features",
+              row_title="Samples",
+              name="log2Expression",
+              right_annotation=row_ha,
+              show_column_names=FALSE,
+              show_heatmap_legend=FALSE,
+              row_km=2,column_km=3,
+              rect_gp = gpar(col = "#00000020", lwd = 0.15),
+              col=c("white","black"))
+draw(ht)
+
+pdf("heatmap-binary.pdf",width=4,height=8)
+draw(ht)
+invisible(dev.off())
+```
+
 
 ## Grid of ggplots
 
@@ -862,10 +912,11 @@ library(kableExtra)
 library(magick)
 
 ## method 1 (recommended): sizes table correctly
-temp <- cars[1:10,]
-tab <- kbl(temp,booktabs=TRUE,format="latex",escape=FALSE)
-tab %>% kable_styling(latex_options="scale_down") %>% 
-  kableExtra::as_image(file=paste0("table1-1.pdf"))
+## recently does not work
+#temp <- cars[1:10,]
+#tab <- kbl(temp,booktabs=TRUE,format="latex",escape=FALSE)
+#tab %>% kable_styling(latex_options="scale_down") %>% 
+#  kableExtra::as_image(file=paste0("table1-1.pdf"))
 
 ## method 2
 tab <- kbl(cars[1:10,]) %>%
