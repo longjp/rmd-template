@@ -317,10 +317,15 @@ Break down by gender and make group category labels look nice:
 library(survminer)
 fit  <- survfit(Surv(futime,death) ~sex, 
               data=mgus)
-p <- ggsurvplot(fit,data=mgus,risk.table=TRUE,ylim=c(0,1),
-                legend.title="",legend.labs=levels(mgus$sex))
+p <- ggsurvplot(fit,
+                data=mgus,risk.table=TRUE,ylim=c(0,1),
+                legend.title="",legend.labs=levels(mgus$sex),
+                risk.table.y.text.col = T,
+                risk.table.y.text = FALSE)
 print(p)
 ```
+
+
 
 
 When zooming in, need to redefine tick mark locations on x-axis. Also change theme to get nice grid lines.
